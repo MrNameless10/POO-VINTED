@@ -1,21 +1,36 @@
 package Projeto.Models;
 
+import java.time.Year;
+
 public class Sapatilha extends ArtigoBase {
     private int tamanho;
-    private boolean possuiAtacadores;
+    private boolean temAtacadores;
     private String cor;
-    private int anoLancamento;
-    private int numeroDonos;
-    private double estadoUtilizacao;
+    private Year dataLancamentoColecao;
+    private boolean isPremium;
 
-    public Sapatilha(String codigo, String descricao, String marca, double precoBase, int tamanho, boolean possuiAtacadores, String cor, int anoLancamento, int numeroDonos, double estadoUtilizacao) {
-        super(codigo, descricao, marca, precoBase);
+    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto);
         this.tamanho = tamanho;
-        this.possuiAtacadores = possuiAtacadores;
+        this.temAtacadores = temAtacadores;
         this.cor = cor;
-        this.anoLancamento = anoLancamento;
-        this.numeroDonos = numeroDonos;
-        this.estadoUtilizacao = estadoUtilizacao;
+        this.dataLancamentoColecao = dataLancamentoColecao;
+        this.isPremium = isPremium;
+    }
+
+    @Override
+    public double getPrecoFinal() {
+        if (isPremium) {
+            // Se for premium, o valor aumenta com o passar dos anos
+            int anosDesdeLancamento = Year.now().getValue() - dataLancamentoColecao.getValue();
+            return precoBase * (1 + 0.05 * anosDesdeLancamento);
+        } else if (!isNovo || tamanho > 45) {
+            // Se for usado ou novo com tamanho acima de 45, aplica a fórmula
+            return precoBase - (precoBase / numDonosAnteriores * avaliacaoEstado);
+        } else {
+            // Se for novo e tamanho não acima de 45, retorna o preço base
+            return precoBase;
+        }
     }
 
     public int getTamanho() {
@@ -26,12 +41,12 @@ public class Sapatilha extends ArtigoBase {
         this.tamanho = tamanho;
     }
 
-    public boolean isPossuiAtacadores() {
-        return possuiAtacadores;
+    public boolean isTemAtacadores() {
+        return temAtacadores;
     }
 
-    public void setPossuiAtacadores(boolean possuiAtacadores) {
-        this.possuiAtacadores = possuiAtacadores;
+    public void setTemAtacadores(boolean temAtacadores) {
+        this.temAtacadores = temAtacadores;
     }
 
     public String getCor() {
@@ -42,34 +57,20 @@ public class Sapatilha extends ArtigoBase {
         this.cor = cor;
     }
 
-    public int getAnoLancamento() {
-        return anoLancamento;
+    public Year getDataLancamentoColecao() {
+        return dataLancamentoColecao;
     }
 
-    public void setAnoLancamento(int anoLancamento) {
-        this.anoLancamento = anoLancamento;
+    public void setDataLancamentoColecao(Year dataLancamentoColecao) {
+        this.dataLancamentoColecao = dataLancamentoColecao;
     }
 
-    public int getNumeroDonos() {
-        return numeroDonos;
+    @Override
+    public boolean isPremium() {
+        return isPremium;
     }
 
-    public void setNumeroDonos(int numeroDonos) {
-        this.numeroDonos = numeroDonos;
+    public void setPremium(boolean premium) {
+        isPremium = premium;
     }
-
-    public double getEstadoUtilizacao() {
-        return estadoUtilizacao;
-    }
-
-    public void setEstadoUtilizacao(double estadoUtilizacao) {
-        this.estadoUtilizacao = estadoUtilizacao;
-    }
-
-    public double getPrecoFinal() {
-        double precoFinal = precoBase - (precoBase / numeroDonos * estadoUtilizacao);
-        return precoFinal;
-    }
-
-
 }

@@ -5,7 +5,6 @@ public abstract class ArtigoBase implements Artigo {
     protected String descricao;
     protected String marca;
     protected double precoBase;
-    protected String dono;
     protected boolean isNovo;
     protected double avaliacaoEstado;
     protected int numDonosAnteriores;
@@ -60,14 +59,6 @@ public abstract class ArtigoBase implements Artigo {
 
     public void setPrecoBase(double precoBase) {
         this.precoBase = precoBase;
-    }
-
-    public String getDono() {
-        return dono;
-    }
-
-    public void setDono(String dono) {
-        this.dono = dono;
     }
 
     public boolean isNovo() {
