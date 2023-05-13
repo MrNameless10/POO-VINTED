@@ -1,5 +1,7 @@
 package Projeto.Models;
 
+import java.time.Year;
+
 public class TShirt extends ArtigoBase {
     public enum Tamanho {
         S, M, L, XL
@@ -34,6 +36,16 @@ public class TShirt extends ArtigoBase {
     public void setPadrao(Padrao padrao) {
         this.padrao = padrao;
     }
+
+    @Override
+    public double getPrecoFinal() {
+        else if (!isNovo && padrao != Padrao.LISO) {
+            return precoBase * 0.5;
+        } else {
+            return precoBase;
+        }
+    }
+
 
     @Override
     public String toString() {

@@ -75,4 +75,24 @@ public class Mala extends ArtigoBase {
     public boolean isVendido() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Mala{" +
+                "dimensao=" + dimensao +
+                ", material='" + material + '\'' +
+                ", anoColecao=" + anoColecao +
+                ", isPremium=" + isPremium +
+                ", valorizacaoAnual=" + valorizacaoAnual +
+                ", codigo='" + codigo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", marca='" + marca + '\'' +
+                ", precoBase=" + precoBase +
+                ", isNovo=" + isNovo +
+                ", avaliacaoEstado=" + avaliacaoEstado +
+                ", numDonosAnteriores=" + numDonosAnteriores +
+                ", desconto=" + desconto +
+                ", isVendido=" + isVendido +
+                '}';
+    }
 }
