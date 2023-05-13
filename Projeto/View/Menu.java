@@ -1,32 +1,65 @@
-import Projeto.Models.*;
-
 import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
     private enum State {
-        PRINCIPAL, LOGIN, REGISTAR, ESTATISTICAS, AVANCAR, SAIR
-    }
+        INICIAL, LOGIN, REGISTAR, PRINCIPAL, GERIR,
+        ADICIONAR, APAGAR, COMPRAR, VER_ENCOMENDA, FINALIZAR,
+        ESTATISTICAS, AVANCAR, SAIR
+    };
 
     private final Scanner scanner;
-    private State state = MAIN_MENU;
+    private State state = State.INICIAL;
 
     public Menu() {
         this.scanner = new Scanner(System.in);
     }
 
     public void run() {
-        while (this.state != SAIR) {
+        while (this.state != State.SAIR) {
             switch (this.state) {
-                case MAIN_MENU:
+                case State.INICIAL:
                     displayMenu();
+                    break;
+                case State.REGISTAR:
+                    displayRegistarSubMenu();
+                    break;
+                case State.LOGIN:
+                    displayLoginSubMenu();
+                    break;
+                case State.PRINCIPAL:
+                    displayUtilizadorMenu();
+                    break;
+                case State.GERIR:
+                    displayGerirArtigosSubMenu();
+                    break;
+                case State.ADICIONAR:
+                    displayAdicionarArtigoSubMenu();
+                    break;
+                case State.APAGAR:
+                    displayApagarArtigo();
+                    break;
+                case State.COMPRAR:
+                    displayComprarArtigosSubMenu();
+                    break;
+                case State.VER_ENCOMENDA:
+                    displayVerEncomendaSubMenu();
+                    break;
+                case State.FINALIZAR:
+                    // TODO - Finalizar a encomenda no controller
+                    break;
+                case State.ESTATISTICAS:
+                    displayEstatisticasSubMenu();
+                    break;
+                case State.AVANCAR:
+                    // TODO - Avançar tempo no controller
                     break;
             }
         }
     }
 
     public void displayMenu() {
-        System.out.println("\nMENU PRINCIPAL - Vintage Marketplace");
+        System.out.println("\nMENU INICIAL - Vintage Marketplace");
         System.out.println("1. Login");
         System.out.println("2. Registar");
         System.out.println("3. Estatisticas");
@@ -37,26 +70,27 @@ public class Menu {
 
         switch (input) {
             case 1:
-                this.state = LOGIN;
+                this.state = State.LOGIN;
                 break;
             case 2:
-                this.state = REGISTAR;
+                this.state = State.REGISTAR;
                 break;
             case 3:
-                this.state = ESTATISTICAS;
+                this.state = State.ESTATISTICAS;
                 break;
             case 4:
-                this.state = AVANCAR;
+                this.state = State.AVANCAR;
                 break;
             case 5:
-                this.state = SAIR;
+                this.state = State.SAIR;
                 break;
             default:
+                System.out.println("Opção inválida.");
                 break;
         }
     }
 
-    public Utilizador displayRegistarSubMenu() {
+    public void displayRegistarSubMenu() {
         scanner.nextLine(); // Limpar o buffer de entrada
         System.out.println("\n--- Registar ---");
         System.out.print("Enter the e-mail: ");
@@ -67,10 +101,24 @@ public class Menu {
         String morada = scanner.nextLine();
         System.out.print("Enter the número Fiscal: ");
         String nif = scanner.nextLine();
-        return new Utilizador(email, nome, morada, nif);
+        
+        // TODO - Adicionar utilizador no controller
+        
+        // TODO - Verificar se utilizador foi criado com sucesso (email nao se pode repetir)
+        this.state = State.INICIAL;
     }
 
-    public int displayUtilizadorMenu() {
+    public void displayLoginSubMenu() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.println("\n--- Login ---");
+        System.out.print("Enter the e-mail: ");
+        String email = scanner.nextLine();
+
+        // TODO - Verificar se utilizador existe
+        this.state = State.PRINCIPAL;
+    }
+
+    public void displayUtilizadorMenu() {
         System.out.println("\nMENU UTILIZADOR - Vintage Marketplace");
         System.out.println("1. Gerir artigos");
         System.out.println("2. Comprar artigos");
@@ -78,51 +126,96 @@ public class Menu {
         System.out.println("4. Finalizar encomenda");
         System.out.println("5. Voltar para o menu principal (Logout)");
         System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
+        int input = scanner.nextInt();
+
+        switch (input) {
+            case 1:
+                this.state = State.GERIR;
+                break;
+            case 2:
+                this.state = State.COMPRAR;
+                break;
+            case 3:
+                this.state = State.VER_ENCOMENDA;
+                break;
+            case 4:
+                this.state = State.FINALIZAR;
+                break;
+            case 5:
+                this.state = State.INICIAL;
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                break;
+        }
     }
 
-    public int displayGerirArtigosSubMenu() {
+    public void displayGerirArtigosSubMenu() {
         System.out.println("\n--- Gerir artigos ---");
         System.out.println("1. Adicionar");
         System.out.println("2. Apagar");
         System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
+        int input = scanner.nextInt();
+
+        switch (input) {
+            case 1:
+                this.state = State.ADICIONAR;
+                break;
+            case 2:
+                this.state = State.APAGAR;
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                break;
+        }
     }
 
-    public String displayApagarArtigo() {
+    public void displayApagarArtigo() {
         System.out.println("\n--- Apagar artigos ---");
+        
+        // TODO - Mostrar os artigos do utilizador (vindos em string do controller)
+
         System.out.print("Enter the código do artigo a apagar: ");
-        return scanner.nextLine();
+
+        String artigo = scanner.nextLine();
+
+        // TODO - Apagar artigo no controller
+
+        this.state = State.PRINCIPAL;
     }
 
-    public int displayAdicionarArtigoSubMenu() {
-        System.out.println("\n--- Adicionar artigo ---");
-        System.out.println("1. Sapatilhas");
-        System.out.println("2. T-Shirts");
-        System.out.println("3. Malas");
-        System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
-    }
-
-    public int displayComprarArtigosSubMenu() {
-        System.out.println("\n--- Comprar artigos ---");
-        System.out.println("1. Sapatilhas");
-        System.out.println("2. T-Shirts");
-        System.out.println("3. Malas");
-        System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
-}
-
-    public int displayVerEncomendaSubMenu() {
+    public void displayVerEncomendaSubMenu() {
         System.out.println("\n--- Ver encomenda ---");
         System.out.println("1. Preço total");
         System.out.println("2. Ver artigos");
         System.out.println("3. Remover artigo");
         System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
+        int input = scanner.nextInt();
+
+        switch (input) {
+            case 1:
+                // TODO - Mostrar preço total (vindo do controller)
+                break;
+            case 2:
+                // TODO - Listar artigos (vindo do controller)
+                break;
+            case 3:
+                // TODO - Listar artigos (vindo do controller)
+                System.out.print("Enter the código do artigo a apagar: ");
+
+                String artigo = scanner.nextLine();
+
+                // TODO - Remover artigo da encomenda no controller
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                break;
+        }
+
+        this.state = State.PRINCIPAL;
     }
 
-    public int displayEstatisticasSubMenu() {
+    public void displayEstatisticasSubMenu() {
         System.out.println("\n--- Estatísticas ---");
         System.out.println("1. Vendedor que mais facturou");
         System.out.println("2. Transportadora com maior volume de facturação");
@@ -130,120 +223,189 @@ public class Menu {
         System.out.println("4. Ordenação dos maiores compradores/vendedores");
         System.out.println("5. Dinheiro ganho pelo Vintage");
         System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
-    }
+        int input = scanner.nextInt();
 
-    public Artigo createSapatilhasArtigo() {
-        scanner.nextLine(); // Limpar o buffer de entrada
-        System.out.print("Enter the descrição: ");
-        String descricao = scanner.nextLine();
-        System.out.print("Enter the marca: ");
-        String marca = scanner.nextLine();
-        System.out.print("Enter the preço base: ");
-        double precoBase = scanner.nextDouble();
-        System.out.print("Is it new? (true/false): ");
-        boolean isNovo = scanner.nextBoolean();
-
-        if (isNovo) {
-            // Artigo novo
-            return new Sapatilhas(descricao, marca, precoBase);
-        } else {
-            // Artigo usado
-            System.out.print("Enter the avaliação estado: ");
-            double avaliacaoEstado = scanner.nextDouble();
-            System.out.print("Enter the número de donos anteriores: ");
-            int numDonosAnteriores = scanner.nextInt();
-            return new Sapatilhas(descricao, marca, precoBase, false, avaliacaoEstado, numDonosAnteriores);
+        switch (input) {
+            case 1:
+                // TODO - Controller
+                break;
+            case 2:
+                // TODO - Controller
+                break;
+            case 3:
+                // TODO - Controller
+                break;
+            case 4:
+                // TODO - Controller
+                break;
+            case 5:
+                // TODO - Controller
+                break;
+            default:
+                break;
         }
     }
 
-    public Artigo createTShirtArtigo() {
-        scanner.nextLine(); // Limpar o buffer de entrada
-        System.out.print("Enter the descrição: ");
-        String descricao = scanner.nextLine();
-        System.out.print("Enter the marca: ");
-        String marca = scanner.nextLine();
-        System.out.print("Enter the preço base: ");
-        double precoBase = scanner.nextDouble();
-        System.out.print("Is it new? (true/false): ");
-        boolean isNovo = scanner.nextBoolean();
-
-        if (isNovo) {
-            // Artigo novo
-            return new TShirt(descricao, marca, precoBase);
-        } else {
-            // Artigo usado
-            System.out.print("Enter the avaliação estado: ");
-            double avaliacaoEstado = scanner.nextDouble();
-            System.out.print("Enter the número de donos anteriores: ");
-            int numDonosAnteriores = scanner.nextInt();
-            return new TShirt(descricao, marca, precoBase, false, avaliacaoEstado, numDonosAnteriores);
-        }
-    }
-
-    public Artigo createMalaArtigo() {
-        scanner.nextLine(); // Limpar o buffer de entrada
-        System.out.print("Enter the descrição: ");
-        String descricao = scanner.nextLine();
-        System.out.print("Enter the marca: ");
-        String marca = scanner.nextLine();
-        System.out.print("Enter the preço base: ");
-        double precoBase = scanner.nextDouble();
-        System.out.print("Is it new? (true/false): ");
-        boolean isNovo = scanner.nextBoolean();
-
-        if (isNovo) {
-            // Artigo novo
-            return new Mala(descricao, marca, precoBase);
-        } else {
-            // Artigo usado
-            System.out.print("Enter the avaliação estado: ");
-            double avaliacaoEstado = scanner.nextDouble();
-            System.out.print("Enter the número de donos anteriores: ");
-            int numDonosAnteriores = scanner.nextInt();
-            return new Mala(descricao, marca, precoBase, false, avaliacaoEstado, numDonosAnteriores);
-        }
-    }
-
-    public Artigo getArtigoToAdd() {
+    public void displayAdicionarArtigoSubMenu() {
         System.out.println("\n--- Adicionar artigo ---");
         System.out.println("1. Sapatilhas");
         System.out.println("2. T-Shirts");
         System.out.println("3. Malas");
         System.out.print("Digite a opção desejada: ");
-        int option = scanner.nextInt();
-        scanner.nextLine(); // Limpar o buffer de entrada
+        int input = scanner.nextInt();
 
-        switch (option) {
+        switch (input) {
             case 1:
-                return createSapatilhasArtigo();
+                createSapatilhasArtigo();
+                break;
             case 2:
-                return createTShirtArtigo();
+                createTShirtArtigo();
+                break;
             case 3:
-                return createMalaArtigo();
+                createMalaArtigo();
+                break;
             default:
-                throw new IllegalArgumentException("Opção inválida: " + option);
+                System.out.println("Opção inválida.");
+                break;
+        }
+
+        this.state = State.PRINCIPAL;
+    }
+
+    public void createSapatilhasArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.print("Enter the descrição: ");
+        String descricao = scanner.nextLine();
+        System.out.print("Enter the marca: ");
+        String marca = scanner.nextLine();
+        System.out.print("Enter the preço base: ");
+        double precoBase = scanner.nextDouble();
+        System.out.print("Is it new? (true/false): ");
+        boolean isNovo = scanner.nextBoolean();
+
+        if (isNovo) {
+            // Artigo novo
+            // TODO - Adicionar o novo artigo no controller
+        } else {
+            // Artigo usado
+            System.out.print("Enter the avaliação estado: ");
+            double avaliacaoEstado = scanner.nextDouble();
+            System.out.print("Enter the número de donos anteriores: ");
+            int numDonosAnteriores = scanner.nextInt();
+            // TODO - Adicionar o novo artigo no controller
         }
     }
 
+    public void createTShirtArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.print("Enter the descrição: ");
+        String descricao = scanner.nextLine();
+        System.out.print("Enter the marca: ");
+        String marca = scanner.nextLine();
+        System.out.print("Enter the preço base: ");
+        double precoBase = scanner.nextDouble();
+        System.out.print("Is it new? (true/false): ");
+        boolean isNovo = scanner.nextBoolean();
 
-    public void showArtigos(List<Artigo> artigos) {
-        System.out.println("\n--- Artigos Disponíveis ---");
-        for (Artigo artigo : artigos) {
-            System.out.println(artigo.getDescricao() + " - " + artigo.getPrecoFinal());
+        if (isNovo) {
+            // Artigo novo
+            // TODO - Adicionar o novo artigo no controller
+        } else {
+            // Artigo usado
+            System.out.print("Enter the avaliação estado: ");
+            double avaliacaoEstado = scanner.nextDouble();
+            System.out.print("Enter the número de donos anteriores: ");
+            int numDonosAnteriores = scanner.nextInt();
+            // TODO - Adicionar o novo artigo no controller
         }
     }
 
-    public void showEncomenda(List<Artigo> artigos, double precoTotal) {
-        System.out.println("\n--- Encomenda ---");
-        for (Artigo artigo : artigos) {
-            System.out.println(artigo.getDescricao() + " - " + artigo.getPrecoFinal());
+    public void createMalaArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.print("Enter the descrição: ");
+        String descricao = scanner.nextLine();
+        System.out.print("Enter the marca: ");
+        String marca = scanner.nextLine();
+        System.out.print("Enter the preço base: ");
+        double precoBase = scanner.nextDouble();
+        System.out.print("Is it new? (true/false): ");
+        boolean isNovo = scanner.nextBoolean();
+
+        if (isNovo) {
+            // Artigo novo
+            // TODO - Adicionar o novo artigo no controller
+        } else {
+            // Artigo usado
+            System.out.print("Enter the avaliação estado: ");
+            double avaliacaoEstado = scanner.nextDouble();
+            System.out.print("Enter the número de donos anteriores: ");
+            int numDonosAnteriores = scanner.nextInt();
+            // TODO - Adicionar o novo artigo no controller
         }
-        System.out.println("Preço Total: " + precoTotal);
     }
 
+    public void displayComprarArtigosSubMenu() {
+        System.out.println("\n--- Comprar artigos ---");
+        System.out.println("1. Sapatilhas");
+        System.out.println("2. T-Shirts");
+        System.out.println("3. Malas");
+        System.out.print("Digite a opção desejada: ");
+        int input = scanner.nextInt();
 
-    public void showMessage(String message) {
-        System.out.println(message);
+        switch (input) {
+            case 1:
+                displayComprarSapatilhasArtigo();
+                break;
+            case 2:
+                displayComprarTshirtArtigo();
+                break;
+            case 3:
+                displayComprarMalaArtigo();
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                break;
+        }
+
+        this.state = State.PRINCIPAL;
+    }
+
+    public void displayComprarSapatilhasArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.println("\n--- Comprar Sapatilhas ---");
+
+        // TODO - Listar todas as sapatilhas disponiveis para comprar (vindas do controller como string)
+        
+        System.out.print("Enter the código do artigo a apagar: ");
+
+        String artigo = scanner.nextLine();
+
+        // TODO - Adicionar artigo à encomenda no controller
+    }
+
+    public void displayComprarTshirtArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.println("\n--- Comprar Tshirt ---");
+
+        // TODO - Listar todas as tshirts disponiveis para comprar (vindas do controller como string)
+        
+        System.out.print("Enter the código do artigo a apagar: ");
+
+        String artigo = scanner.nextLine();
+
+        // TODO - Adicionar artigo à encomenda no controller
+    }
+
+    public void displayComprarMalaArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
+        System.out.println("\n--- Comprar Mala ---");
+
+        // TODO - Listar todas as malas disponiveis para comprar (vindas do controller como string)
+        
+        System.out.print("Enter the código do artigo a apagar: ");
+
+        String artigo = scanner.nextLine();
+
+        // TODO - Adicionar artigo à encomenda no controller
     }
 }
