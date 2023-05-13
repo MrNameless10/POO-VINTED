@@ -35,6 +35,6 @@ public class CTT extends Transportadora {
         double imposto = 0.2;  // Valor do imposto definido pelo sistema
 
         // Fórmula de cálculo do preço
-        return (valorBase * this.margemLucro * (1 + imposto)) * 0.9;
+        return (valorBase * margemLucro * (1 + imposto)) * 0.9;
     }
 }

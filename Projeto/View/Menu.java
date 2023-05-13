@@ -11,15 +11,13 @@ public class Menu {
 
     public int displayMenu() {
         System.out.println("\nMENU VIEW - Vintage Marketplace");
-        System.out.println("1. Registar usuário");
-        System.out.println("2. Gerir Artigo");
-        System.out.println("3. Registar transportadora");
-        System.out.println("4. Gerir encomendas");
-        System.out.println("5. Avançar o tempo");
-        System.out.println("6. Estatísticas");
-        System.out.println("7. Atualizar informações de transportadora");
-        System.out.println("8. Executar simulação automática");
-        System.out.println("9. Sair");
+        System.out.println("1. Login");
+        System.out.println("2. Registar");
+        System.out.println("3. Estatisticas");
+        System.out.println("4. Avançar o tempo");
+        System.out.println("5. Sair");
+        System.out.println("6. Executar simulação automática");
+        System.out.println("7. Sair");
         System.out.print("Digite a opção desejada: ");
         return scanner.nextInt();
     }

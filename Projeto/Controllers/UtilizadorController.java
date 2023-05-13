@@ -3,34 +3,42 @@ package Projeto.Controllers;
 import Projeto.Models.Artigo;
 import Projeto.Models.Utilizador;
 
+package Projeto.Controllers;
+
+import Projeto.Models.Utilizador;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 public class UtilizadorController {
-    private Utilizador utilizador;
+    private List<Utilizador> utilizadores;
 
-    public UtilizadorController(Utilizador utilizador) {
-        this.utilizador = utilizador;
+    public UtilizadorController() {
+        this.utilizadores = new ArrayList<>();
     }
 
-    public void adicionarArtigoVenda(Artigo artigo) {
-        utilizador.adicionarArtigoVenda(artigo);
+    public void criarUtilizador(Utilizador utilizador) {
+        this.utilizadores.add(utilizador);
     }
 
-    public void removerArtigoVenda(Artigo artigo) {
-        utilizador.removerArtigoVenda(artigo);
+    public List<Utilizador> obterUtilizadores() {
+        return this.utilizadores;
     }
 
-    public void adicionarArtigoComprado(Artigo artigo) {
-        utilizador.adicionarArtigoComprado(artigo);
+
+    public Utilizador obterUtilizadorPorEmail(String email) {
+        return this.utilizadores.stream()
+                .filter(utilizador -> utilizador.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElse(null);
     }
 
-    public void removerArtigoComprado(Artigo artigo) {
-        utilizador.removerArtigoComprado(artigo);
-    }
-
-    public void adicionarVenda(Venda venda) {
-        utilizador.adicionarVenda(venda);
-    }
-
-    public void removerVenda(Venda venda) {
-        utilizador.removerVenda(venda);
+    public Utilizador obterUtilizadorPorCodigo(String codigoUtilizador) {
+        return this.utilizadores.stream()
+                .filter(utilizador -> utilizador.getCodigo().equalsIgnoreCase(codigoUtilizador))
+                .findFirst()
+                .orElse(null);
     }
 }
+

@@ -24,5 +24,5 @@ public interface Artigo {
     void setAvaliacaoEstado(double avaliacaoEstado);
     void setNumDonosAnteriores(int numDonosAnteriores);
     void setDesconto(double desconto);
-    void setisVendido();
+    void setisVendido(boolean b);
 }

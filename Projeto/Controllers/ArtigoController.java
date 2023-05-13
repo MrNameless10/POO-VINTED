@@ -1,40 +1,47 @@
 package Projeto.Controllers;
 
 import Projeto.Models.Artigo;
-import Projeto.Models.Mala;
-import Projeto.Models.Sapatilha;
-import Projeto.Models.TShirt;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArtigoController {
-    public Artigo criarSapatilha(String codigo, String descricao, String marca, double precoBase, int tamanho, boolean possuiAtacadores, String cor, int anoLancamento, int numeroDonos, double estadoUtilizacao) {
-        return new Sapatilha(codigo, descricao, marca, precoBase, tamanho, possuiAtacadores, cor, anoLancamento, numeroDonos, estadoUtilizacao);
+    private List<Artigo> artigos;
+
+    public ArtigoController() {
+        this.artigos = new ArrayList<>();
     }
 
-    public Artigo criarMala(String codigo, String descricao, String marca, double precoBase, String dimensao, String material, int anoColecao, boolean premium, double valorizacaoAnual) {
-        return new Mala(codigo, descricao, marca, precoBase, dimensao, material, anoColecao, premium, valorizacaoAnual);
+    public void criarArtigo(Artigo artigo) {
+        this.artigos.add(artigo);
     }
 
-    public Artigo criarTShirt(String codigo, String descricao, String marca, double precoBase, String tamanho, String padrao, boolean usada) {
-        return new TShirt(codigo, descricao, marca, precoBase, tamanho, padrao, usada);
+    public List<Artigo> obterArtigos() {
+        return this.artigos;
     }
 
-    public double calcularPrecoFinal(Artigo artigo) {
-        return artigo.getPrecoFinal();
+    public List<Artigo> obterArtigosDisponiveis() {
+        return this.artigos.stream()
+                .filter(artigo -> !artigo.isVendido())
+                .toList();
     }
 
-    public boolean removerArtigo(List<Artigo> artigos, String codigo) {
-        Optional<Artigo> artigoToRemove = artigos.stream()
-                .filter(artigo -> artigo.getCodigo().equals(codigo))
-                .findFirst();
+    public List<Artigo> obterArtigosPorMarca(String marca) {
+        return this.artigos.stream()
+                .filter(artigo -> artigo.getMarca().equalsIgnoreCase(marca))
+                .toList();
+    }
 
-        if (artigoToRemove.isPresent()) {
-            artigos.remove(artigoToRemove.get());
-            return true;
+    public void venderArtigo(String codigoArtigo) {
+        Artigo artigo = obterArtigoPorCodigo(codigoArtigo);
+        if (artigo != null && !artigo.isVendido()) {
+            artigo.setisVendido(true);
         }
-
-        return false;
     }
-}
+
+    public Artigo obterArtigoPorCodigo(String codigoArtigo) {
+        return this.artigos.stream()
+                .filter(artigo -> artigo.getCodigo().equalsIgnoreCase(codigoArtigo))
+                .findFirst()
+                .orElse(null);
+    }
 }
