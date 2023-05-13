@@ -12,6 +12,30 @@ public class TShirt extends ArtigoBase {
         this.usada = usada;
     }
 
+    public String getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(String tamanho) {
+        this.tamanho = tamanho;
+    }
+
+    public String getPadrao() {
+        return padrao;
+    }
+
+    public void setPadrao(String padrao) {
+        this.padrao = padrao;
+    }
+
+    public boolean isUsada() {
+        return usada;
+    }
+
+    public void setUsada(boolean usada) {
+        this.usada = usada;
+    }
+
     public double getPrecoFinal() {
         if (!padrao.equals("liso") && usada) {
             return precoBase * 0.5;

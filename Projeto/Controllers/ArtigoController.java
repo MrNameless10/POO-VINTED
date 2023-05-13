@@ -5,8 +5,7 @@ import Projeto.Models.Mala;
 import Projeto.Models.Sapatilha;
 import Projeto.Models.TShirt;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ArtigoController {
     public Artigo criarSapatilha(String codigo, String descricao, String marca, double precoBase, int tamanho, boolean possuiAtacadores, String cor, int anoLancamento, int numeroDonos, double estadoUtilizacao) {

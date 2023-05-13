@@ -18,6 +18,54 @@ public class Sapatilha extends ArtigoBase {
         this.estadoUtilizacao = estadoUtilizacao;
     }
 
+    public int getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(int tamanho) {
+        this.tamanho = tamanho;
+    }
+
+    public boolean isPossuiAtacadores() {
+        return possuiAtacadores;
+    }
+
+    public void setPossuiAtacadores(boolean possuiAtacadores) {
+        this.possuiAtacadores = possuiAtacadores;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    public int getAnoLancamento() {
+        return anoLancamento;
+    }
+
+    public void setAnoLancamento(int anoLancamento) {
+        this.anoLancamento = anoLancamento;
+    }
+
+    public int getNumeroDonos() {
+        return numeroDonos;
+    }
+
+    public void setNumeroDonos(int numeroDonos) {
+        this.numeroDonos = numeroDonos;
+    }
+
+    public double getEstadoUtilizacao() {
+        return estadoUtilizacao;
+    }
+
+    public void setEstadoUtilizacao(double estadoUtilizacao) {
+        this.estadoUtilizacao = estadoUtilizacao;
+    }
+
     public double getPrecoFinal() {
         double precoFinal = precoBase - (precoBase / numeroDonos * estadoUtilizacao);
         return precoFinal;

@@ -18,6 +18,30 @@ public class Venda {
         this.estado = "Pendente";
     }
 
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Venda.count = count;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVendedor(Utilizador vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public void setComprador(Utilizador comprador) {
+        this.comprador = comprador;
+    }
+
+    public void setArtigo(Artigo artigo) {
+        this.artigo = artigo;
+    }
+
     public int getId() {
         return id;
     }

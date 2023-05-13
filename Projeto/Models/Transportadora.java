@@ -49,6 +49,34 @@ public class Transportadora {
         return transportadoraPremium;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setValorBaseExpedicaoPequena(double valorBaseExpedicaoPequena) {
+        this.valorBaseExpedicaoPequena = valorBaseExpedicaoPequena;
+    }
+
+    public void setValorBaseExpedicaoMedia(double valorBaseExpedicaoMedia) {
+        this.valorBaseExpedicaoMedia = valorBaseExpedicaoMedia;
+    }
+
+    public void setValorBaseExpedicaoGrande(double valorBaseExpedicaoGrande) {
+        this.valorBaseExpedicaoGrande = valorBaseExpedicaoGrande;
+    }
+
+    public void setFactorImpostos(double factorImpostos) {
+        this.factorImpostos = factorImpostos;
+    }
+
+    public void setMargemLucro(double margemLucro) {
+        this.margemLucro = margemLucro;
+    }
+
+    public void setTransportadoraPremium(boolean transportadoraPremium) {
+        this.transportadoraPremium = transportadoraPremium;
+    }
+
     public double calcularPrecoExpedicao(int numArtigos, boolean isPremium) {
         double valorBaseExpedicao;
         if (numArtigos == 1) {
@@ -65,4 +93,5 @@ public class Transportadora {
         }
         return precoExpedicao;
     }
+
 }

@@ -60,6 +60,55 @@ public class Encomenda {
         return estado;
     }
 
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Encomenda.count = count;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public void setArtigos(List<Artigo> artigos) {
+        this.artigos = artigos;
+    }
+
+    public void setDimensaoEmbalagem(String dimensaoEmbalagem) {
+        this.dimensaoEmbalagem = dimensaoEmbalagem;
+    }
+
+    public void setPrecoFinal(double precoFinal) {
+        this.precoFinal = precoFinal;
+    }
+
+    public void setTaxaSatisfacao(double taxaSatisfacao) {
+        this.taxaSatisfacao = taxaSatisfacao;
+    }
+
+    public void setCustosExpedicao(double custosExpedicao) {
+        this.custosExpedicao = custosExpedicao;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Transportadora getTransportadora() {
+        return transportadora;
+    }
+
+    public void setTransportadora(Transportadora transportadora) {
+        this.transportadora = transportadora;
+    }
+
     public void adicionarArtigo(Artigo artigo) {
         artigos.add(artigo);
     }
@@ -67,6 +116,7 @@ public class Encomenda {
     public void removerArtigo(Artigo artigo) {
         artigos.remove(artigo);
     }
+
 
     public void calcularPrecoFinal() {
         double total = 0.0;

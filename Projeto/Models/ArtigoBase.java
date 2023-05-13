@@ -13,6 +13,22 @@ public abstract class ArtigoBase implements Artigo {
         this.precoBase = precoBase;
     }
 
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public void setPrecoBase(double precoBase) {
+        this.precoBase = precoBase;
+    }
+
     public String getCodigo() {
         return codigo;
     }

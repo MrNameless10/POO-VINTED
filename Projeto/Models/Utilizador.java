@@ -24,6 +24,46 @@ public class Utilizador {
         this.vendas = new ArrayList<>();
     }
 
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Utilizador.count = count;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setMorada(String morada) {
+        this.morada = morada;
+    }
+
+    public void setNumeroFiscal(String numeroFiscal) {
+        this.numeroFiscal = numeroFiscal;
+    }
+
+    public void setArtigosVenda(List<Artigo> artigosVenda) {
+        this.artigosVenda = artigosVenda;
+    }
+
+    public void setArtigosComprados(List<Artigo> artigosComprados) {
+        this.artigosComprados = artigosComprados;
+    }
+
+    public void setVendas(List<Venda> vendas) {
+        this.vendas = vendas;
+    }
+
     public int getCodigo() {
         return this.codigo;
     }

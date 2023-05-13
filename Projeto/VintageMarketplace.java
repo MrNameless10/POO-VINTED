@@ -11,6 +11,7 @@ package Projeto;
 
 import Projeto.Controllers.MainController;
 
+
 public class VintageMarketplace {
     public static void main(String[] args) {
         MainController mainController = new MainController();

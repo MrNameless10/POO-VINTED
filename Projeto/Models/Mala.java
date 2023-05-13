@@ -18,6 +18,42 @@ public class Mala extends ArtigoBase {
         this.valorizacaoAnual = valorizacaoAnual;
     }
 
+    public String getDimensao() {
+        return dimensao;
+    }
+
+    public void setDimensao(String dimensao) {
+        this.dimensao = dimensao;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public int getAnoColecao() {
+        return anoColecao;
+    }
+
+    public void setAnoColecao(int anoColecao) {
+        this.anoColecao = anoColecao;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
+
+    public double getValorizacaoAnual() {
+        return valorizacaoAnual;
+    }
+
+    public void setValorizacaoAnual(double valorizacaoAnual) {
+        this.valorizacaoAnual = valorizacaoAnual;
+    }
+
     public double getPrecoFinal() {
         if (premium) {
             int anosDesdeColecao = LocalDate.now().getYear() - anoColecao;
@@ -27,6 +63,8 @@ public class Mala extends ArtigoBase {
             return precoBase;
         }
     }
+
+
 
     @Override
     public boolean isPremium() {
