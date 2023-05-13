@@ -1,46 +1,54 @@
 package Projeto.Models;
 
 public class TShirt extends ArtigoBase {
-    private String tamanho;
-    private String padrao;
-    private boolean usada;
-
-    public TShirt(String codigo, String descricao, String marca, double precoBase, String tamanho, String padrao, boolean usada) {
-        super(codigo, descricao, marca, precoBase);
-        this.tamanho = tamanho;
-        this.padrao = padrao;
-        this.usada = usada;
+    public enum Tamanho {
+        S, M, L, XL
     }
 
-    public String getTamanho() {
+    public enum Padrao {
+        LISO, RISCAS, PALMEIRAS
+    }
+
+    private Tamanho tamanho;
+    private Padrao padrao;
+
+    public TShirt(String codigo, String descricao, String marca, double precoBase, boolean isNovo, int avaliacaoEstado,
+                  int numDonosAnteriores, double desconto, boolean isVendido, Tamanho tamanho, Padrao padrao) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
+        this.tamanho = tamanho;
+        this.padrao = padrao;
+    }
+
+    public Tamanho getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(String tamanho) {
+    public void setTamanho(Tamanho tamanho) {
         this.tamanho = tamanho;
     }
 
-    public String getPadrao() {
+    public Padrao getPadrao() {
         return padrao;
     }
 
-    public void setPadrao(String padrao) {
+    public void setPadrao(Padrao padrao) {
         this.padrao = padrao;
     }
 
-    public boolean isUsada() {
-        return usada;
-    }
-
-    public void setUsada(boolean usada) {
-        this.usada = usada;
-    }
-
-    public double getPrecoFinal() {
-        if (!padrao.equals("liso") && usada) {
-            return precoBase * 0.5;
-        } else {
-            return precoBase;
-        }
+    @Override
+    public String toString() {
+        return "TShirt{" +
+                "codigo='" + codigo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", marca='" + marca + '\'' +
+                ", precoBase=" + precoBase +
+                ", isNovo=" + isNovo +
+                ", avaliacaoEstado=" + avaliacaoEstado +
+                ", numDonosAnteriores=" + numDonosAnteriores +
+                ", desconto=" + desconto +
+                ", isVendido=" + isVendido +
+                ", tamanho=" + tamanho +
+                ", padrao=" + padrao +
+                '}';
     }
 }

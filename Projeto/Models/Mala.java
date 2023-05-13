@@ -3,26 +3,38 @@ package Projeto.Models;
 import java.time.LocalDate;
 
 public class Mala extends ArtigoBase {
-    private String dimensao;
+    private int dimensao;
     private String material;
     private int anoColecao;
-    private boolean premium;
+
+    private boolean isPremium;
     private double valorizacaoAnual;
 
-    public Mala(String codigo, String descricao, String marca, double precoBase, String dimensao, String material, int anoColecao, boolean premium, double valorizacaoAnual) {
-        super(codigo, descricao, marca, precoBase);
+    public Mala(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
         this.dimensao = dimensao;
         this.material = material;
         this.anoColecao = anoColecao;
-        this.premium = premium;
+        this.isPremium = isPremium;
         this.valorizacaoAnual = valorizacaoAnual;
     }
 
-    public String getDimensao() {
+
+    public double getPrecoFinal() {
+        if (isPremium) {
+            int anosDesdeColecao = LocalDate.now().getYear() - anoColecao;
+            double precoFinal = precoBase + (precoBase * valorizacaoAnual * anosDesdeColecao);
+            return precoFinal;
+        } else {
+            return precoBase;
+        }
+    }
+
+    public int getDimensao() {
         return dimensao;
     }
 
-    public void setDimensao(String dimensao) {
+    public void setDimensao(int dimensao) {
         this.dimensao = dimensao;
     }
 
@@ -43,7 +55,7 @@ public class Mala extends ArtigoBase {
     }
 
     public void setPremium(boolean premium) {
-        this.premium = premium;
+        isPremium = premium;
     }
 
     public double getValorizacaoAnual() {
@@ -53,18 +65,6 @@ public class Mala extends ArtigoBase {
     public void setValorizacaoAnual(double valorizacaoAnual) {
         this.valorizacaoAnual = valorizacaoAnual;
     }
-
-    public double getPrecoFinal() {
-        if (premium) {
-            int anosDesdeColecao = LocalDate.now().getYear() - anoColecao;
-            double precoFinal = precoBase + (precoBase * valorizacaoAnual * anosDesdeColecao);
-            return precoFinal;
-        } else {
-            return precoBase;
-        }
-    }
-
-
 
     @Override
     public boolean isPremium() {

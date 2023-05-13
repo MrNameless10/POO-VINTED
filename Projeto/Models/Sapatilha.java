@@ -9,8 +9,8 @@ public class Sapatilha extends ArtigoBase {
     private Year dataLancamentoColecao;
     private boolean isPremium;
 
-    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto);
+    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, boolean isVendido, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
         this.tamanho = tamanho;
         this.temAtacadores = temAtacadores;
         this.cor = cor;
@@ -70,7 +70,33 @@ public class Sapatilha extends ArtigoBase {
         return isPremium;
     }
 
+    @Override
+    public boolean isVendido() {
+        return false;
+    }
+
     public void setPremium(boolean premium) {
         isPremium = premium;
     }
+
+    @Override
+    public String toString() {
+        return "Sapatilha{" +
+                "tamanho=" + tamanho +
+                ", temAtacadores=" + temAtacadores +
+                ", cor='" + cor + '\'' +
+                ", dataLancamentoColecao=" + dataLancamentoColecao +
+                ", isPremium=" + isPremium +
+                ", codigo='" + codigo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", marca='" + marca + '\'' +
+                ", precoBase=" + precoBase +
+                ", isNovo=" + isNovo +
+                ", avaliacaoEstado=" + avaliacaoEstado +
+                ", numDonosAnteriores=" + numDonosAnteriores +
+                ", desconto=" + desconto +
+                ", isVendido=" + isVendido +
+                '}';
+    }
+
 }

@@ -10,7 +10,9 @@ public abstract class ArtigoBase implements Artigo {
     protected int numDonosAnteriores;
     protected double desconto;
 
-    public ArtigoBase(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto) {
+    protected boolean isVendido;
+
+    public ArtigoBase(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.marca = marca;
@@ -19,6 +21,7 @@ public abstract class ArtigoBase implements Artigo {
         this.avaliacaoEstado = avaliacaoEstado;
         this.numDonosAnteriores = numDonosAnteriores;
         this.desconto = desconto;
+        this.isVendido = isVendido;
     }
 
     public double getPrecoFinal() {
@@ -91,5 +94,13 @@ public abstract class ArtigoBase implements Artigo {
 
     public void setDesconto(double desconto) {
         this.desconto = desconto;
+    }
+
+    public boolean isVendido() {
+        return isVendido;
+    }
+
+    public void setVendido(boolean vendido) {
+        isVendido = vendido;
     }
 }
