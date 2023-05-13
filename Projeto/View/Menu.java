@@ -1,4 +1,6 @@
 import Projeto.Models.Artigo;
+import Projeto.Models.Utilizador;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,65 +15,37 @@ public class Menu {
         System.out.println("\nMENU VIEW - Vintage Marketplace");
         System.out.println("1. Login");
         System.out.println("2. Registar");
-        System.out.println("3. Estatisticas");
-        System.out.println("4. Avançar o tempo");
-        System.out.println("5. Sair");
+        System.out.println("3. Criar Transportadora");
+        System.out.println("4. Estatisticas");
+        System.out.println("5. Avançar o tempo");
         System.out.println("6. Executar simulação automática");
         System.out.println("7. Sair");
         System.out.print("Digite a opção desejada: ");
         return scanner.nextInt();
     }
 
-    public int displayArtigoSubMenu() {
-        System.out.println("\n--- Gerir Artigo ---");
-        System.out.println("1. Criar Artigo");
-        System.out.println("2. Listar Artigos");
-        System.out.println("3. Atualizar Artigo");
-        System.out.println("4. Deletar Artigo");
-        System.out.println("5. Retornar ao Menu Principal");
-        System.out.print("Choose an option: ");
+    public int displayLoginSubMenu() {
+        System.out.println("\n--- Login ---");
+        System.out.print("Enter the e-mail: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter the número Fiscal: ");
+        String name = scanner.nextLine();
         return scanner.nextInt();
     }
 
-    public Artigo getArtigoDetails() {
-        System.out.println("\n--- Add Artigo ---");
-        scanner.nextLine(); // Consume newline
-        System.out.print("Enter the name: ");
+    public int displayRegistarSubMenu() {
+        System.out.println("\n--- Registar ---");
+        System.out.print("Enter the e-mail: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter the nome: ");
         String name = scanner.nextLine();
-        System.out.print("Enter the description: ");
-        String description = scanner.nextLine();
-        System.out.print("Enter the price: ");
-        double price = scanner.nextDouble();
-        return new Artigo(name, description, price);
+        System.out.print("Enter the morada: ");
+        String morada = scanner.nextLine();
+        System.out.print("Enter the número Fiscal: ");
+        String nif= scanner.nextLine();
+        return new Utilizador(email, name, morada, nif);
     }
 
-    public void displayArtigos(List<Artigo> artigos) {
-        System.out.println("\n--- List Artigos ---");
-        for (Artigo artigo : artigos) {
-            System.out.println(artigo);
-        }
-    }
-
-    public int getArtigoId(String action) {
-        System.out.println("\n--- " + action + " Artigo ---");
-        System.out.print("Enter the Artigo ID: ");
-        return scanner.nextInt();
-    }
-
-    public Artigo updateArtigoDetails(Artigo artigo) {
-        System.out.println("\n--- Update Artigo ---");
-        scanner.nextLine(); // Consume newline
-        System.out.println("Current Name: " + artigo.getName());
-        System.out.print("Enter new name: ");
-        String name = scanner.nextLine();
-        System.out.println("Current Description: " + artigo.getDescription());
-        System.out.print("Enter new description: ");
-        String description = scanner.nextLine();
-        System.out.println("Current Price: " + artigo.getPrice());
-        System.out.print("Enter new price: ");
-        double price = scanner.nextDouble();
-        return new Artigo(name, description, price);
-    }
 
     public void showMessage(String message) {
         System.out.println(message);
