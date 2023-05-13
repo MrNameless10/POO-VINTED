@@ -1,5 +1,7 @@
 package Projeto.Models;
 
+import Projeto.Exceptions.PrazoExpiradoException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,11 +141,11 @@ public class Encomenda {
         return LocalDate.now().isBefore(prazoDevolucao);
     }
 
-    public void devolverEncomenda() {
+    public void devolverEncomenda() throws PrazoExpiradoException{
         if (podeDevolver()) {
             this.estado = Estado.DEVOLVIDA;
         } else {
-            System.out.println("O prazo para devolução expirou.");
+            throw new PrazoExpiradoException("O prazo para devolução expirou.");
         }
     }
 

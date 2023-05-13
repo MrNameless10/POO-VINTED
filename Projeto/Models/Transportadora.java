@@ -1,97 +1,42 @@
 package Projeto.Models;
 
-public class Transportadora {
+public abstract class Transportadora {
+    private String codigo;
     private String nome;
-    private double valorBaseExpedicaoPequena;
-    private double valorBaseExpedicaoMedia;
-    private double valorBaseExpedicaoGrande;
-    private double factorImpostos;
-    private double margemLucro;
-    private boolean transportadoraPremium;
+    private double valorBasePequena;
+    private double valorBaseMedia;
+    private double valorBaseGrande;
+    private double imposto;
+    private boolean especializadaPremium;
 
-    public Transportadora(String nome, double valorBaseExpedicaoPequena, double valorBaseExpedicaoMedia,
-                          double valorBaseExpedicaoGrande, double factorImpostos, double margemLucro,
-                          boolean transportadoraPremium) {
+    public Transportadora(String codigo, String nome, double valorBasePequena, double valorBaseMedia,
+                          double valorBaseGrande, double imposto, boolean especializadaPremium) {
+        this.codigo = codigo;
         this.nome = nome;
-        this.valorBaseExpedicaoPequena = valorBaseExpedicaoPequena;
-        this.valorBaseExpedicaoMedia = valorBaseExpedicaoMedia;
-        this.valorBaseExpedicaoGrande = valorBaseExpedicaoGrande;
-        this.factorImpostos = factorImpostos;
-        this.margemLucro = margemLucro;
-        this.transportadoraPremium = transportadoraPremium;
+        this.valorBasePequena = valorBasePequena;
+        this.valorBaseMedia = valorBaseMedia;
+        this.valorBaseGrande = valorBaseGrande;
+        this.imposto = imposto;
+        this.especializadaPremium = especializadaPremium;
     }
 
-    public String getNome() {
-        return nome;
-    }
 
-    public double getValorBaseExpedicaoPequena() {
-        return valorBaseExpedicaoPequena;
-    }
-
-    public double getValorBaseExpedicaoMedia() {
-        return valorBaseExpedicaoMedia;
-    }
-
-    public double getValorBaseExpedicaoGrande() {
-        return valorBaseExpedicaoGrande;
-    }
-
-    public double getFactorImpostos() {
-        return factorImpostos;
-    }
-
-    public double getMargemLucro() {
-        return margemLucro;
-    }
-
-    public boolean isTransportadoraPremium() {
-        return transportadoraPremium;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setValorBaseExpedicaoPequena(double valorBaseExpedicaoPequena) {
-        this.valorBaseExpedicaoPequena = valorBaseExpedicaoPequena;
-    }
-
-    public void setValorBaseExpedicaoMedia(double valorBaseExpedicaoMedia) {
-        this.valorBaseExpedicaoMedia = valorBaseExpedicaoMedia;
-    }
-
-    public void setValorBaseExpedicaoGrande(double valorBaseExpedicaoGrande) {
-        this.valorBaseExpedicaoGrande = valorBaseExpedicaoGrande;
-    }
-
-    public void setFactorImpostos(double factorImpostos) {
-        this.factorImpostos = factorImpostos;
-    }
-
-    public void setMargemLucro(double margemLucro) {
-        this.margemLucro = margemLucro;
-    }
-
-    public void setTransportadoraPremium(boolean transportadoraPremium) {
-        this.transportadoraPremium = transportadoraPremium;
-    }
-
-    public double calcularPrecoExpedicao(int numArtigos, boolean isPremium) {
-        double valorBaseExpedicao;
-        if (numArtigos == 1) {
-            valorBaseExpedicao = valorBaseExpedicaoPequena;
-        } else if (numArtigos >= 2 && numArtigos <= 5) {
-            valorBaseExpedicao = valorBaseExpedicaoMedia;
-        } else {
-            valorBaseExpedicao = valorBaseExpedicaoGrande;
+    public double getValorBase(Encomenda.Dimensao dimensao) {
+        switch (dimensao) {
+            case PEQUENO:
+                return valorBasePequena;
+            case MEDIO:
+                return valorBaseMedia;
+            case GRANDE:
+                return valorBaseGrande;
+            default:
+                throw new IllegalArgumentException("Dimensao desconhecida: " + dimensao);
         }
-
-        double precoExpedicao = valorBaseExpedicao * margemLucro * (1 + factorImpostos);
-        if (isPremium && transportadoraPremium) {
-            precoExpedicao *= 0.9;
-        }
-        return precoExpedicao;
     }
 
+    public boolean isEspecializadaPremium() {
+        return especializadaPremium;
+    }
+
+    public abstract double calcularPrecoExpedicao(Artigo artigo);
 }
