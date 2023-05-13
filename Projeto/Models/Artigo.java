@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 
 public interface Artigo {
     String getCodigo();
@@ -7,4 +7,6 @@ public interface Artigo {
     double getPrecoBase();
     double getPrecoFinal();
     boolean isPremium();
+
+    boolean isVendido();
 }

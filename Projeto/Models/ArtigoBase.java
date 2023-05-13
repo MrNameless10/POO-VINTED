@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 
 public abstract class ArtigoBase implements Artigo {
     protected String codigo;

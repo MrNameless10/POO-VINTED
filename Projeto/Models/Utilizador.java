@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,5 +72,41 @@ public class Utilizador {
         vendas.add(venda);
     }
 
-    // Other methods as needed...
+    public void removerArtigoComprado(Artigo artigo) {
+        artigosComprados.remove(artigo);
+    }
+
+    public void removerVenda(Venda venda) {
+        vendas.remove(venda);
+    }
+
+    public List<Artigo> obterArtigosDisponiveis() {
+        List<Artigo> artigosDisponiveis = new ArrayList<>();
+        for (Artigo artigo : artigosVenda) {
+            if (!artigo.isVendido()) {
+                artigosDisponiveis.add(artigo);
+            }
+        }
+        return artigosDisponiveis;
+    }
+
+    public List<Venda> obterVendasPendentes() {
+        List<Venda> vendasPendentes = new ArrayList<>();
+        for (Venda venda : vendas) {
+            if (venda.getEstado().equals("Pendente")) {
+                vendasPendentes.add(venda);
+            }
+        }
+        return vendasPendentes;
+    }
+
+    public double obterTotalVendas() {
+        double totalVendas = 0.0;
+        for (Venda venda : vendas) {
+            totalVendas += venda.getValor();
+        }
+        return totalVendas;
+    }
+
+
 }

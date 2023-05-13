@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 
 public class Sapatilha extends ArtigoBase {
     private int tamanho;
@@ -22,4 +22,6 @@ public class Sapatilha extends ArtigoBase {
         double precoFinal = precoBase - (precoBase / numeroDonos * estadoUtilizacao);
         return precoFinal;
     }
+
+
 }

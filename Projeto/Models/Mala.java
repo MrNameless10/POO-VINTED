@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 
 import java.time.LocalDate;
 
@@ -26,5 +26,15 @@ public class Mala extends ArtigoBase {
         } else {
             return precoBase;
         }
+    }
+
+    @Override
+    public boolean isPremium() {
+        return false;
+    }
+
+    @Override
+    public boolean isVendido() {
+        return false;
     }
 }

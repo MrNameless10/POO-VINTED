@@ -1,4 +1,4 @@
-package Projeto;
+package Projeto.Models;
 
 public class TShirt extends ArtigoBase {
     private String tamanho;
