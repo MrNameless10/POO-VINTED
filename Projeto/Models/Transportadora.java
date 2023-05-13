@@ -1,70 +1,114 @@
 package Projeto.Models;
 
-
 public class Transportadora {
+    private static int count = 1; // Counter to generate unique IDs for each carrier
+    private String codigo;
     private String nome;
-    private String formulaCalculo;
-    private double valorBasePequena;
-    private double valorBaseMedia;
-    private double valorBaseGrande;
-    private double imposto;
-    private boolean especializadaPremium;
+    private boolean isPremium;
+    private double valorBasePequeno; // base cost for small items
+    private double valorBaseMedio; // base cost for medium items
+    private double valorBaseGrande; // base cost for large items
+    private double margemLucro; // profit margin
 
-    public Transportadora(String nome, String formulaCalculo, double valorBasePequena, double valorBaseMedia,
-                          double valorBaseGrande, double imposto, boolean especializadaPremium) {
+    public Transportadora(String nome, double valorBasePequeno, double valorBaseMedio,
+                          double valorBaseGrande, double margemLucro, boolean isPremium) {
+        this.codigo = "T" + (++count); // generates code automatically
         this.nome = nome;
-        this.formulaCalculo = formulaCalculo;
-        this.valorBasePequena = valorBasePequena;
-        this.valorBaseMedia = valorBaseMedia;
+        this.valorBasePequeno = valorBasePequeno;
+        this.valorBaseMedio = valorBaseMedio;
         this.valorBaseGrande = valorBaseGrande;
-        this.imposto = imposto;
-        this.especializadaPremium = especializadaPremium;
+        this.margemLucro = margemLucro;
+        this.isPremium = isPremium;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Transportadora.count = count;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getFormulaCalculo() {
-        return formulaCalculo;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public boolean isPremium() {
+        return isPremium;
     }
 
-    public void setFormulaCalculo(String formulaCalculo) {
-        this.formulaCalculo = formulaCalculo;
+    public void setPremium(boolean premium) {
+        isPremium = premium;
     }
 
-    public double getValorBase(Encomenda.Dimensao dimensao) {
-        switch (dimensao) {
-            case PEQUENO:
-                return valorBasePequena;
-            case MEDIO:
-                return valorBaseMedia;
-            case GRANDE:
-                return valorBaseGrande;
-            default:
-                throw new IllegalArgumentException("Dimensão desconhecida: " + dimensao);
-        }
+    public double getValorBasePequeno() {
+        return valorBasePequeno;
     }
 
-    public double calcularPrecoExpedicao(Encomenda encomenda) {
-        double valorBase = getValorBase(encomenda.getDimensao());
+    public void setValorBasePequeno(double valorBasePequeno) {
+        this.valorBasePequeno = valorBasePequeno;
+    }
+
+    public double getValorBaseMedio() {
+        return valorBaseMedio;
+    }
+
+    public void setValorBaseMedio(double valorBaseMedio) {
+        this.valorBaseMedio = valorBaseMedio;
+    }
+
+    public double getValorBaseGrande() {
+        return valorBaseGrande;
+    }
+
+    public void setValorBaseGrande(double valorBaseGrande) {
+        this.valorBaseGrande = valorBaseGrande;
+    }
+
+    public double getMargemLucro() {
+        return margemLucro;
+    }
+
+    public void setMargemLucro(double margemLucro) {
+        this.margemLucro = margemLucro;
+    }
+
+    // Calculate shipping cost based on the size and number of items in the order
+    public double calcularCustoExpedicao(Encomenda encomenda) {
+        double custo = 0;
         int numArtigos = encomenda.getArtigos().size();
-        double margemLucro = calcularMargemLucro();
 
-        double precoExpedicao = (valorBase * margemLucro * (1 + imposto)) * 0.9;
-
-        if (especializadaPremium && encomenda.isPremium()) {
-            // Aplicar regra de cálculo específica para artigos premium
-            precoExpedicao *= 1.5;
+        switch (encomenda.getDimensao()) {
+            case GRANDE:
+                custo = this.valorBaseGrande * numArtigos;
+                break;
+            case MEDIO:
+                custo = this.valorBaseMedio * numArtigos;
+                break;
+            case PEQUENO:
+            default:
+                custo = this.valorBasePequeno * numArtigos;
+                break;
         }
 
-        return precoExpedicao * numArtigos;
-    }
+        if (this.isPremium) {
+            custo *= 0.9; // 10% discount for premium carriers
+        }
 
-    private double calcularMargemLucro() {
-        // Implemente aqui a lógica para calcular a margem de lucro
-        // Pode ser um valor fixo ou obtido de alguma forma específica
-        // Neste exemplo, vamos retornar 0.2 como margem de lucro de 20%
-        return 0.2;
+        // Apply profit margin
+        custo *= (1 + this.margemLucro);
+
+        return custo;
     }
 }
