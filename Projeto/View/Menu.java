@@ -4,13 +4,28 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
+    private enum State {
+        PRINCIPAL, LOGIN, REGISTAR, ESTATISTICAS, AVANCAR, SAIR
+    }
+
     private final Scanner scanner;
+    private State state = MAIN_MENU;
 
     public Menu() {
         this.scanner = new Scanner(System.in);
     }
 
-    public int displayMenu() {
+    public void run() {
+        while (this.state != SAIR) {
+            switch (this.state) {
+                case MAIN_MENU:
+                    displayMenu();
+                    break;
+            }
+        }
+    }
+
+    public void displayMenu() {
         System.out.println("\nMENU PRINCIPAL - Vintage Marketplace");
         System.out.println("1. Login");
         System.out.println("2. Registar");
@@ -18,7 +33,27 @@ public class Menu {
         System.out.println("4. Avançar o tempo");
         System.out.println("5. Sair");
         System.out.print("Digite a opção desejada: ");
-        return scanner.nextInt();
+        int input = scanner.nextInt();
+
+        switch (input) {
+            case 1:
+                this.state = LOGIN;
+                break;
+            case 2:
+                this.state = REGISTAR;
+                break;
+            case 3:
+                this.state = ESTATISTICAS;
+                break;
+            case 4:
+                this.state = AVANCAR;
+                break;
+            case 5:
+                this.state = SAIR;
+                break;
+            default:
+                break;
+        }
     }
 
     public Utilizador displayRegistarSubMenu() {
