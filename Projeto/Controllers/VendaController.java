@@ -1,7 +1,5 @@
 package Projeto.Controllers;
 
-import Projeto.Models.Venda;
-
 public class VendaController {
     private Venda venda;
 

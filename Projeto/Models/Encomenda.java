@@ -5,152 +5,143 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Encomenda {
-    private static int count = 1; // Counter to generate unique IDs for each order
-    private int id;
-    private LocalDate dataCriacao;
+    public enum Dimensao {
+        GRANDE, MEDIO, PEQUENO
+    }
+
+    public enum Estado {
+        PENDENTE, FINALIZADA, EXPEDIDA, DEVOLVIDA
+    }
+
+    private String codigo;
     private List<Artigo> artigos;
-    private String dimensaoEmbalagem;
+    private Dimensao dimensao;
     private double precoFinal;
-    private double taxaSatisfacao;
     private double custosExpedicao;
-    private String estado;
-    private Transportadora transportadora;
+    private double taxaSatisfacaoServico;
+    private Estado estado;
+    private LocalDate dataCriacao;
 
-    public Encomenda(List<Artigo> artigos, String dimensaoEmbalagem, Transportadora transportadora) {
-        this.id = count++;
+    public Encomenda(String codigo, Dimensao dimensao) {
+        this.codigo = codigo;
+        this.artigos = new ArrayList<>();
+        this.dimensao = dimensao;
+        this.estado = Estado.PENDENTE;
         this.dataCriacao = LocalDate.now();
-        this.artigos = new ArrayList<>(artigos);
-        this.dimensaoEmbalagem = dimensaoEmbalagem;
-        this.precoFinal = 0.0;
-        this.taxaSatisfacao = 0.0;
-        this.custosExpedicao = 0.0;
-        this.estado = "Pendente";
-        this.transportadora = transportadora;
     }
 
-    public int getId() {
-        return id;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public List<Artigo> getArtigos() {
         return artigos;
     }
 
-    public String getDimensaoEmbalagem() {
-        return dimensaoEmbalagem;
+    public void setArtigos(List<Artigo> artigos) {
+        this.artigos = artigos;
+    }
+
+    public Dimensao getDimensao() {
+        return dimensao;
+    }
+
+    public void setDimensao(Dimensao dimensao) {
+        this.dimensao = dimensao;
     }
 
     public double getPrecoFinal() {
         return precoFinal;
     }
 
-    public double getTaxaSatisfacao() {
-        return taxaSatisfacao;
+    public void setPrecoFinal(double precoFinal) {
+        this.precoFinal = precoFinal;
     }
 
     public double getCustosExpedicao() {
         return custosExpedicao;
     }
 
-    public String getEstado() {
+    public double getTaxaSatisfacaoServico() {
+        return taxaSatisfacaoServico;
+    }
+
+    public void setTaxaSatisfacaoServico(double taxaSatisfacaoServico) {
+        this.taxaSatisfacaoServico = taxaSatisfacaoServico;
+    }
+
+    public Estado getEstado() {
         return estado;
     }
 
-
-    public static int getCount() {
-        return count;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
-    public static void setCount(int count) {
-        Encomenda.count = count;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public void setArtigos(List<Artigo> artigos) {
-        this.artigos = artigos;
+    public void adicionarArtigo(Artigo artigo) {
+        this.artigos.add(artigo);
+        calcularPrecoFinal();
     }
 
-    public void setDimensaoEmbalagem(String dimensaoEmbalagem) {
-        this.dimensaoEmbalagem = dimensaoEmbalagem;
+    public void removerArtigo(Artigo artigo) {
+        this.artigos.remove(artigo);
+        calcularPrecoFinal();
     }
 
-    public void setPrecoFinal(double precoFinal) {
-        this.precoFinal = precoFinal;
+    public void calcularPrecoFinal() {
+        double total = 0;
+        this.taxaSatisfacaoServico = 0;
+        for (Artigo artigo : artigos) {
+            total += artigo.getPrecoFinal();
+            if (artigo.isNovo()) {
+                this.taxaSatisfacaoServico += 0.5;
+            } else {
+                this.taxaSatisfacaoServico += 0.25;
+            }
+        }
+        total += this.custosExpedicao + this.taxaSatisfacaoServico;
+        this.precoFinal = total;
     }
 
-    public void setTaxaSatisfacao(double taxaSatisfacao) {
-        this.taxaSatisfacao = taxaSatisfacao;
+    public void finalizarEncomenda() {
+        if (this.estado == Estado.PENDENTE) {
+            this.estado = Estado.FINALIZADA;
+        }
+    }
+
+    public void expedirEncomenda() {
+        if (this.estado == Estado.FINALIZADA) {
+            this.estado = Estado.EXPEDIDA;
+        }
     }
 
     public void setCustosExpedicao(double custosExpedicao) {
         this.custosExpedicao = custosExpedicao;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public Transportadora getTransportadora() {
-        return transportadora;
-    }
-
-    public void setTransportadora(Transportadora transportadora) {
-        this.transportadora = transportadora;
-    }
-
-    public void adicionarArtigo(Artigo artigo) {
-        artigos.add(artigo);
-    }
-
-    public void removerArtigo(Artigo artigo) {
-        artigos.remove(artigo);
+        calcularPrecoFinal();
     }
 
 
-    public void calcularPrecoFinal() {
-        double total = 0.0;
-        for (Artigo artigo : artigos) {
-            total += artigo.getPrecoFinal();
-        }
-        this.precoFinal = total + (0.5 * artigos.size()); // Add service satisfaction fee per new article
+
+    public boolean podeDevolver() {
+        LocalDate prazoDevolucao = this.dataCriacao.plusDays(30);
+        return LocalDate.now().isBefore(prazoDevolucao);
     }
 
-    public void calcularCustosExpedicao() {
-        int numArtigos = artigos.size();
-        boolean isPremium = false;
-        for (Artigo artigo : artigos) {
-            if (artigo.isPremium()) {
-                isPremium = true;
-                break;
-            }
-        }
-
-        this.custosExpedicao = transportadora.calcularPrecoExpedicao(numArtigos, isPremium);
-    }
-
-    public void finalizarEncomenda() {
-        this.estado = "Finalizada";
-    }
-
-    public void expedirEncomenda() {
-        this.estado = "Expedida";
-    }
-
-    public void devolverEncomenda(int prazoDevolucao) {
-        LocalDate dataEntrega = dataCriacao.plusDays(prazoDevolucao);
-        if (LocalDate.now().isBefore(dataEntrega)) {
-            this.estado = "Devolvida";
+    public void devolverEncomenda() {
+        if (podeDevolver()) {
+            this.estado = Estado.DEVOLVIDA;
         } else {
             System.out.println("O prazo para devolução expirou.");
         }

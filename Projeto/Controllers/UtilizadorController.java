@@ -2,7 +2,6 @@ package Projeto.Controllers;
 
 import Projeto.Models.Artigo;
 import Projeto.Models.Utilizador;
-import Projeto.Models.Venda;
 
 public class UtilizadorController {
     private Utilizador utilizador;
