@@ -111,4 +111,17 @@ public class Transportadora {
 
         return custo;
     }
+
+    @Override
+    public String toString() {
+        return "Transportadora{" +
+                "codigo='" + codigo + '\'' +
+                ", nome='" + nome + '\'' +
+                ", isPremium=" + isPremium +
+                ", valorBasePequeno=" + valorBasePequeno +
+                ", valorBaseMedio=" + valorBaseMedio +
+                ", valorBaseGrande=" + valorBaseGrande +
+                ", margemLucro=" + margemLucro +
+                '}';
+    }
 }

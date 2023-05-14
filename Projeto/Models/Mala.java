@@ -10,9 +10,10 @@ public class Mala extends ArtigoBase {
     private boolean isPremium;
     private double valorizacaoAnual;
 
-    public Mala(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado,
-                int numDonosAnteriores, double desconto, boolean isVendido, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual, String dono) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono);
+
+    public Mala(String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado,
+                int numDonosAnteriores, double desconto, boolean isVendido, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual, String dono, Transportadora transportadora) {
+        super(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono, transportadora);
         this.dimensao = dimensao;
         this.material = material;
         this.anoColecao = anoColecao;
@@ -85,7 +86,6 @@ public class Mala extends ArtigoBase {
                 ", anoColecao=" + anoColecao +
                 ", isPremium=" + isPremium +
                 ", valorizacaoAnual=" + valorizacaoAnual +
-                ", codigo='" + codigo + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", marca='" + marca + '\'' +
                 ", precoBase=" + precoBase +
@@ -94,6 +94,7 @@ public class Mala extends ArtigoBase {
                 ", numDonosAnteriores=" + numDonosAnteriores +
                 ", desconto=" + desconto +
                 ", isVendido=" + isVendido +
+                ", dono='" + dono + '\'' +
                 '}';
     }
 }

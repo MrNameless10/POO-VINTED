@@ -41,7 +41,7 @@ public class Encomenda {
     }
 
     public List<Artigo> getArtigos() {
-        return artigos;
+        return this.artigos;
     }
 
     public void setArtigos(List<Artigo> artigos) {

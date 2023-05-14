@@ -9,8 +9,10 @@ public class Sapatilha extends ArtigoBase {
     private Year dataLancamentoColecao;
     private boolean isPremium;
 
-    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, boolean isVendido, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium, String dono) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono);
+
+
+    public Sapatilha(String descricao, String marca, double precoBase, boolean isNovo, boolean isVendido, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium, String dono, Transportadora transportadora) {
+        super(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono,transportadora);
         this.tamanho = tamanho;
         this.temAtacadores = temAtacadores;
         this.cor = cor;
@@ -109,7 +111,6 @@ public class Sapatilha extends ArtigoBase {
                 ", cor='" + cor + '\'' +
                 ", dataLancamentoColecao=" + dataLancamentoColecao +
                 ", isPremium=" + isPremium +
-                ", codigo='" + codigo + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", marca='" + marca + '\'' +
                 ", precoBase=" + precoBase +
@@ -118,7 +119,7 @@ public class Sapatilha extends ArtigoBase {
                 ", numDonosAnteriores=" + numDonosAnteriores +
                 ", desconto=" + desconto +
                 ", isVendido=" + isVendido +
+                ", dono='" + dono + '\'' +
                 '}';
     }
-
 }

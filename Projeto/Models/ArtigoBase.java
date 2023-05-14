@@ -1,7 +1,8 @@
 package Projeto.Models;
 
 public abstract class ArtigoBase implements Artigo {
-    protected String codigo;
+    private static int count = 1; // Counter to generate unique IDs for each user
+    private String codigo;
     protected String descricao;
     protected String marca;
     protected double precoBase;
@@ -12,10 +13,12 @@ public abstract class ArtigoBase implements Artigo {
 
     protected boolean isVendido;
 
+    protected Transportadora transportadora;
+
     protected String dono;
 
-    public ArtigoBase(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido, String dono) {
-        this.codigo = codigo;
+    public ArtigoBase(String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido, String dono, Transportadora transportadora) {
+        this.codigo = "A" + (++count);
         this.descricao = descricao;
         this.marca = marca;
         this.precoBase = precoBase;
@@ -25,6 +28,7 @@ public abstract class ArtigoBase implements Artigo {
         this.desconto = desconto;
         this.isVendido = isVendido;
         this.dono = dono;
+        this.transportadora = transportadora;
     }
 
     public double getPrecoFinal() {
@@ -127,6 +131,30 @@ public abstract class ArtigoBase implements Artigo {
         } catch (NumberFormatException e) {
             System.out.println("Estado inválido. Não foi possível converter para double.");
         }
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        ArtigoBase.count = count;
+    }
+
+    public void setNovo(boolean novo) {
+        isNovo = novo;
+    }
+
+    public void setVendido(boolean vendido) {
+        isVendido = vendido;
+    }
+
+    public Transportadora getTransportadora() {
+        return transportadora;
+    }
+
+    public void setTransportadora(Transportadora transportadora) {
+        this.transportadora = transportadora;
     }
 
     @Override

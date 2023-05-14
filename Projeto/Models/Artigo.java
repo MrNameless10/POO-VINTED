@@ -26,4 +26,6 @@ public interface Artigo {
     void setisVendido(boolean b);
 
     boolean isPremium();
+
+    Transportadora getTransportadora();
 }
