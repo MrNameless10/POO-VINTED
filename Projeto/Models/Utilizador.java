@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utilizador implements Serializable {
-    private static int count = 1; // Counter to generate unique IDs for each user
+    private static int count = 1;
     private String codigo;
     private String email;
     private String nome;
@@ -15,7 +15,7 @@ public class Utilizador implements Serializable {
     private List<Artigo> artigosAdquiridos;
 
     public Utilizador(String email, String nome, String morada, String numeroFiscal)  {
-        this.codigo = "U" + (++count); // gera código automaticamente
+        this.codigo = "U" + (++count);
         this.email = email;
         this.nome = nome;
         this.morada = morada;

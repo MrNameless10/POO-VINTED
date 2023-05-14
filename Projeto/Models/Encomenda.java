@@ -15,7 +15,7 @@ public class Encomenda {
         PENDENTE, FINALIZADA, EXPEDIDA, DEVOLVIDA
     }
 
-    private static int count = 1; // Counter to generate unique IDs for each user
+    private static int count = 1;
     private String codigo;
     private List<Artigo> artigos;
     private Dimensao dimensao;

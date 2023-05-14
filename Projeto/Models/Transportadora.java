@@ -5,21 +5,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Transportadora implements Serializable {
-    private static int count = 1; // Counter to generate unique IDs for each carrier
+    private static int count = 1;
     private String codigo;
     private String nome;
     private boolean isPremium;
-    private double valorBasePequeno; // base cost for small items
-    private double valorBaseMedio; // base cost for medium items
-    private double valorBaseGrande; // base cost for large items
-    private double margemLucro; // profit margin
+    private double valorBasePequeno;
+    private double valorBaseMedio;
+    private double valorBaseGrande;
+    private double margemLucro;
 
     private List<Artigo> artigos;
 
 
     public Transportadora(String nome, double valorBasePequeno, double valorBaseMedio,
                           double valorBaseGrande, double margemLucro, boolean isPremium) {
-        this.codigo = "T" + (++count); // generates code automatically
+        this.codigo = "T" + (++count);
         this.nome = nome;
         this.valorBasePequeno = valorBasePequeno;
         this.valorBaseMedio = valorBaseMedio;
@@ -91,7 +91,7 @@ public class Transportadora implements Serializable {
         this.margemLucro = margemLucro;
     }
 
-    // Calculate shipping cost based on the size and number of items in the order
+
     public double calcularCustoExpedicao(Encomenda encomenda) {
         double custo = 0;
         List<Artigo> artigos = encomenda.getArtigos().stream()
@@ -112,10 +112,10 @@ public class Transportadora implements Serializable {
         }
 
         if (this.isPremium) {
-            custo *= 0.9; // 10% discount for premium carriers
+            custo *= 0.9;
         }
 
-        // Apply profit margin
+
         custo *= (1 + this.margemLucro);
 
         return custo;

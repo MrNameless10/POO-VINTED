@@ -245,6 +245,8 @@ public class MainController implements Serializable {
 
     public String getUtilizadorComMaiorFaturacao(LocalDate dataInicio, LocalDate dataFim) {
         Map<String, Double> utilizadoresFaturacao = new HashMap<>();
+        double maiorFaturacao = 0;
+        String utilizadorComMaiorFaturacao = "";
 
         for (Encomenda encomenda : encomendas) {
             LocalDate dataCriacao = encomenda.getDataCriacao();
@@ -255,21 +257,17 @@ public class MainController implements Serializable {
                 double faturacaoUtilizador = utilizadoresFaturacao.getOrDefault(utilizador.getEmail(), 0.0);
                 faturacaoUtilizador += faturacaoEncomenda;
                 utilizadoresFaturacao.put(utilizador.getCodigo(), faturacaoUtilizador);
-            }
-        }
 
-        double maiorFaturacao = 0;
-        String utilizadorComMaiorFaturacao = "";
-
-        for (Map.Entry<String, Double> entry : utilizadoresFaturacao.entrySet()) {
-            if (entry.getValue() > maiorFaturacao) {
-                maiorFaturacao = entry.getValue();
-                utilizadorComMaiorFaturacao = entry.getKey();
+                if (faturacaoUtilizador > maiorFaturacao) {
+                    maiorFaturacao = faturacaoUtilizador;
+                    utilizadorComMaiorFaturacao = utilizador.getCodigo();
+                }
             }
         }
 
         return utilizadorComMaiorFaturacao;
     }
+
 
 
 
@@ -305,51 +303,53 @@ public class MainController implements Serializable {
 
         for (Encomenda encomenda : encomendas) {
             LocalDate dataCriacao = encomenda.getDataCriacao();
-            if (dataCriacao.isAfter(dataInicio) && dataCriacao.isBefore(dataFim) && encomenda.getEstado() == Encomenda.Estado.FINALIZADA) {
+            if ((!dataCriacao.isBefore(dataInicio) && !dataCriacao.isAfter(dataFim)) && encomenda.getEstado() == Encomenda.Estado.FINALIZADA) {
                 List<Artigo> artigosEncomenda = encomenda.getArtigos();
                 for (Artigo artigo : artigosEncomenda) {
                     Transportadora transportadora = artigo.getTransportadora();
-                    int quantidadeArtigosFaturados = transportadorasQuantidadeArtigos.getOrDefault(transportadora.getCodigo(), 0);
-                    transportadorasQuantidadeArtigos.put(transportadora.getCodigo(), quantidadeArtigosFaturados + 1);
+                    if(transportadora != null) {
+                        String codigoTransportadora = transportadora.getCodigo();
+                        if(codigoTransportadora != null) {
+                            int quantidadeArtigosFaturados = transportadorasQuantidadeArtigos.getOrDefault(codigoTransportadora, 0);
+                            transportadorasQuantidadeArtigos.put(codigoTransportadora, quantidadeArtigosFaturados + 1);
+                        }
+                    }
                 }
             }
         }
 
-        int maiorQuantidadeArtigos = 0;
-        String transportadoraComMaiorQuantidadeArtigos = "";
-
-        for (Map.Entry<String, Integer> entry : transportadorasQuantidadeArtigos.entrySet()) {
-            if (entry.getValue() > maiorQuantidadeArtigos) {
-                maiorQuantidadeArtigos = entry.getValue();
-                transportadoraComMaiorQuantidadeArtigos = entry.getKey();
-            }
-        }
-
-        return transportadoraComMaiorQuantidadeArtigos;
+        return transportadorasQuantidadeArtigos.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("");
     }
+
+
+
 
 
     public List<String> listarEncomendasUtilizador(String emailUtilizador) {
-        List<String> encomendasUtilizador = new ArrayList<>();
+        List<String> listaEncomendas = new ArrayList<>();
 
         for (Encomenda encomenda : encomendas) {
             Utilizador utilizador = encomenda.getUtilizador();
-            if (utilizador.getEmail().equals(emailUtilizador)) {
-                encomendasUtilizador.add(encomenda.toString());
+            if (utilizador != null && emailUtilizador.equals(utilizador.getEmail())) {
+                listaEncomendas.add(encomenda.getCodigo());
             }
         }
 
-        return encomendasUtilizador;
+        return listaEncomendas;
     }
 
+
     public double calcularFaturacaoUtilizador(Utilizador utilizador) {
-        double faturacaoTotal = 0.0;
+        double faturacao = 0.0;
 
         for (Artigo artigo : utilizador.getArtigosVendidos()) {
-            faturacaoTotal += artigo.getPrecoFinal();
+            faturacao += artigo.getPrecoFinal();
         }
 
-        return faturacaoTotal;
+        return faturacao;
     }
 
 
@@ -366,6 +366,7 @@ public class MainController implements Serializable {
 
         return utilizadoresOrdenadosString;
     }
+
 
     public double calcularFaturacaoVintage() {
         double faturacaoTotal = 0.0;
@@ -402,6 +403,5 @@ public class MainController implements Serializable {
 
         }
     }
-
 
 }

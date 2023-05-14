@@ -3,7 +3,7 @@ package Projeto.Models;
 import java.io.Serializable;
 
 public abstract class ArtigoBase implements Artigo, Serializable {
-    private static int count = 1; // Counter to generate unique IDs for each user
+    private static int count = 1;
     private String codigo;
     protected String descricao;
     protected String marca;
