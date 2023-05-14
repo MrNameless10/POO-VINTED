@@ -1,8 +1,9 @@
 package Projeto.Models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Mala extends ArtigoBase {
+public class Mala extends ArtigoBase implements Serializable {
     private int dimensao;
     private String material;
     private int anoColecao;

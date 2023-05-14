@@ -1,8 +1,9 @@
 package Projeto.Models;
 
+import java.io.Serializable;
 import java.time.Year;
 
-public class Sapatilha extends ArtigoBase {
+public class Sapatilha extends ArtigoBase implements Serializable {
     private int tamanho;
     private boolean temAtacadores;
     private String cor;

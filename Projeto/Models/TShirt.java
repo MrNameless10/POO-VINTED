@@ -1,8 +1,9 @@
 package Projeto.Models;
 
+import java.io.Serializable;
 import java.time.Year;
 
-public class TShirt extends ArtigoBase {
+public class TShirt extends ArtigoBase implements Serializable {
     public enum Tamanho {
         S, M, L, XL
     }

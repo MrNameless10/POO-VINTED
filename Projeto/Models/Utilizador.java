@@ -1,8 +1,9 @@
 package Projeto.Models;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Utilizador {
+public class Utilizador implements Serializable {
     private static int count = 1; // Counter to generate unique IDs for each user
     private String codigo;
     private String email;
@@ -13,7 +14,7 @@ public class Utilizador {
     private List<Artigo> artigosVendidos;
     private List<Artigo> artigosAdquiridos;
 
-    public Utilizador(String email, String nome, String morada, String numeroFiscal) {
+    public Utilizador(String email, String nome, String morada, String numeroFiscal)  {
         this.codigo = "U" + (++count); // gera código automaticamente
         this.email = email;
         this.nome = nome;

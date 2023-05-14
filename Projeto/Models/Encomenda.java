@@ -174,4 +174,19 @@ public class Encomenda {
         }
     }
 
+
+    @Override
+    public String toString() {
+        return "Encomenda{" +
+                "codigo='" + codigo + '\'' +
+                ", artigos=" + artigos +
+                ", dimensao=" + dimensao +
+                ", precoFinal=" + precoFinal +
+                ", custosExpedicao=" + custosExpedicao +
+                ", taxaSatisfacaoServico=" + taxaSatisfacaoServico +
+                ", estado=" + estado +
+                ", dataCriacao=" + dataCriacao +
+                ", utilizador=" + utilizador +
+                '}';
+    }
 }

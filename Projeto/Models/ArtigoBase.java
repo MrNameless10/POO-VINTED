@@ -1,6 +1,8 @@
 package Projeto.Models;
 
-public abstract class ArtigoBase implements Artigo {
+import java.io.Serializable;
+
+public abstract class ArtigoBase implements Artigo, Serializable {
     private static int count = 1; // Counter to generate unique IDs for each user
     private String codigo;
     protected String descricao;

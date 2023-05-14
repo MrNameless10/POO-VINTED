@@ -1,9 +1,10 @@
 package Projeto.Models;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Transportadora {
+public class Transportadora implements Serializable {
     private static int count = 1; // Counter to generate unique IDs for each carrier
     private String codigo;
     private String nome;

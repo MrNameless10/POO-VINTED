@@ -3,7 +3,7 @@ import Projeto.Exceptions.*;
 import Projeto.Models.*;
 import jdk.jshell.execution.Util;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.time.Year;
 import java.time.LocalDate;
@@ -65,7 +65,6 @@ public class MainController implements Serializable {
         }
 
         if (transportadoraAtual == null) {
-            System.out.println("Transportadora " + transportadora + " não encontrada");
             return;
         }
 
@@ -92,13 +91,9 @@ public class MainController implements Serializable {
         try {
             TShirt.Tamanho tamanhoEnum = TShirt.Tamanho.valueOf(tamanho.trim().toUpperCase());
             TShirt.Padrao padraoEnum = TShirt.Padrao.valueOf(padrao.trim().toUpperCase());
-            System.out.println(padraoEnum);
-            System.out.println(tamanhoEnum);
             TShirt novaTShirt = new TShirt(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, tamanhoEnum, padraoEnum, utilizadorAtual.getCodigo(), transportadoraAtual);
             artigos.add(novaTShirt);
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid size or pattern provided");
-            System.out.println("Size: " + tamanho + ", Pattern: " + padrao);
             e.printStackTrace();
         }
     }
@@ -248,31 +243,35 @@ public class MainController implements Serializable {
         }
     }
 
-    public String getVendedorComMaiorFaturacao(LocalDate dataInicio, LocalDate dataFim) {
-        Map<String, Double> vendedoresFaturacao = new HashMap<>();
+    public String getUtilizadorComMaiorFaturacao(LocalDate dataInicio, LocalDate dataFim) {
+        Map<String, Double> utilizadoresFaturacao = new HashMap<>();
 
         for (Encomenda encomenda : encomendas) {
             LocalDate dataCriacao = encomenda.getDataCriacao();
             if (dataCriacao.isAfter(dataInicio) && dataCriacao.isBefore(dataFim) && encomenda.getEstado() == Encomenda.Estado.FINALIZADA) {
-                Utilizador vendedor = encomenda.getUtilizador();
-                double faturacaoVendedor = encomenda.getPrecoFinal();
+                Utilizador utilizador = encomenda.getUtilizador();
+                double faturacaoEncomenda = encomenda.getPrecoFinal();
 
-                vendedoresFaturacao.put(vendedor.getCodigo(), vendedoresFaturacao.getOrDefault(vendedor.getCodigo(), 0.0) + faturacaoVendedor);
+                double faturacaoUtilizador = utilizadoresFaturacao.getOrDefault(utilizador.getEmail(), 0.0);
+                faturacaoUtilizador += faturacaoEncomenda;
+                utilizadoresFaturacao.put(utilizador.getCodigo(), faturacaoUtilizador);
             }
         }
 
         double maiorFaturacao = 0;
-        String vendedorComMaiorFaturacao = "";
+        String utilizadorComMaiorFaturacao = "";
 
-        for (Map.Entry<String, Double> entry : vendedoresFaturacao.entrySet()) {
+        for (Map.Entry<String, Double> entry : utilizadoresFaturacao.entrySet()) {
             if (entry.getValue() > maiorFaturacao) {
                 maiorFaturacao = entry.getValue();
-                vendedorComMaiorFaturacao = entry.getKey();
+                utilizadorComMaiorFaturacao = entry.getKey();
             }
         }
 
-        return vendedorComMaiorFaturacao;
+        return utilizadorComMaiorFaturacao;
     }
+
+
 
     public void adicionarTransportadora(String nome, double valorBasePequeno, double valorBaseMedio, double valorBaseGrande, double margemLucro, boolean isPremium) {
         Transportadora novaTransportadora = new Transportadora(nome, valorBasePequeno, valorBaseMedio, valorBaseGrande, margemLucro, isPremium);
@@ -290,6 +289,9 @@ public class MainController implements Serializable {
 
     public void finalizarEncomenda() throws EncomendaNaoExistenteException {
         if (encomendaAtual != null) {
+            for (Artigo artigo : encomendaAtual.getArtigos()) {
+                artigo.setisVendido(true);
+            }
             encomendaAtual.finalizarEncomenda();
             encomendas.add(encomendaAtual);
             encomendaAtual = new Encomenda(utilizadorAtual);
@@ -379,6 +381,27 @@ public class MainController implements Serializable {
         return faturacaoTotal;
     }
 
+    public void gravarEstado(String nomeArquivo) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            oos.writeObject(utilizadores);
+            oos.writeObject(encomendas);
+            oos.writeObject(artigos);
+            oos.writeObject(transportadoras);
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void carregarEstado(String nomeArquivo) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+            utilizadores = (List<Utilizador>) ois.readObject();
+            encomendas = (List<Encomenda>) ois.readObject();
+            artigos = (List<Artigo>) ois.readObject();
+            transportadoras = (List<Transportadora>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+
+        }
+    }
 
 
 }
