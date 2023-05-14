@@ -24,11 +24,14 @@ public class Encomenda {
     private Estado estado;
     private LocalDate dataCriacao;
 
-    public Encomenda(String codigo) {
+    private Utilizador utilizador;
+
+    public Encomenda(String codigo, Utilizador utilizador) {
         this.codigo = codigo;
         this.artigos = new ArrayList<>();
         this.estado = Estado.PENDENTE;
         this.dataCriacao = LocalDate.now();
+        this.utilizador = utilizador;
         calcularDimensao();
     }
 
@@ -90,6 +93,14 @@ public class Encomenda {
 
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public Utilizador getUtilizador() {
+        return utilizador;
+    }
+
+    public void setUtilizador(Utilizador utilizador) {
+        this.utilizador = utilizador;
     }
 
     public void adicionarArtigo(Artigo artigo) {

@@ -1,5 +1,8 @@
 package Projeto.Models;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Transportadora {
     private static int count = 1; // Counter to generate unique IDs for each carrier
     private String codigo;
@@ -9,6 +12,9 @@ public class Transportadora {
     private double valorBaseMedio; // base cost for medium items
     private double valorBaseGrande; // base cost for large items
     private double margemLucro; // profit margin
+
+    private List<Artigo> artigos;
+
 
     public Transportadora(String nome, double valorBasePequeno, double valorBaseMedio,
                           double valorBaseGrande, double margemLucro, boolean isPremium) {
@@ -87,7 +93,9 @@ public class Transportadora {
     // Calculate shipping cost based on the size and number of items in the order
     public double calcularCustoExpedicao(Encomenda encomenda) {
         double custo = 0;
-        int numArtigos = encomenda.getArtigos().size();
+        List<Artigo> artigos = encomenda.getArtigos().stream()
+                .filter(art -> art.getTransportadora().getCodigo().equals(this.codigo)).toList();
+        int numArtigos = artigos.size();
 
         switch (encomenda.getDimensao()) {
             case GRANDE:

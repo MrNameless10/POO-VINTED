@@ -4,9 +4,9 @@ import Projeto.Models.*;
 import jdk.jshell.execution.Util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.time.Year;
+import java.time.LocalDate;
 
 
 public class MainController implements Serializable {
@@ -24,6 +24,8 @@ public class MainController implements Serializable {
         this.utilizadores = new ArrayList<>();
         this.encomendas = new ArrayList<>();
         this.artigos = new ArrayList<>();
+        this.transportadoras = new ArrayList<>();
+        this.encomendaAtual = null;
     }
 
     public void adicionarUtilizador(String email, String nome, String morada, String numeroFiscal) throws UtilizadorExistenteException {
@@ -36,14 +38,14 @@ public class MainController implements Serializable {
         utilizadores.add(novoUtilizador);
     }
 
-    public Utilizador realizarLogin(String email) {
+    public void realizarLogin(String email) throws UtilizadorNaoExistenteException {
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getEmail().equals(email)) {
                 utilizadorAtual = utilizador;
-                return utilizador; // Login bem-sucedido, retorna o utilizador
+                return; //
             }
         }
-        return null; // Login falhou, utilizador não encontrado ou senha incorreta
+        throw new UtilizadorNaoExistenteException("Utilizador com o email '" + email + "' não existe.");
     }
 
     public void adicionarSapatilhaAoUtilizador(String descricao, String marca, double precoBase, boolean isNovo,
@@ -110,6 +112,7 @@ public class MainController implements Serializable {
     public List<String> listarArtigosDoUtilizador() {
         List<String> listaArtigos = new ArrayList<>();
         for (Artigo artigo : artigos) {
+
             if (artigo.getDono().equals(utilizadorAtual.getCodigo())) {
                 listaArtigos.add(artigo.toString());
             }
@@ -188,13 +191,176 @@ public class MainController implements Serializable {
         double totalPrecoArtigos = 0;
 
         for (Artigo artigo : encomendaAtual.getArtigos()) {
-            totalPrecoArtigos += artigo.getPrecoFinal() + artigo.getTransportadora().calcularCustoExpedicao(encomendaA);
+            totalPrecoArtigos += artigo.getPrecoFinal();
         }
 
-        Transportadora transportadora = encomendaAtual.getTransportadora();
-        double custoExpedicao = transportadora.calcularCustoExpedicao(encomendaAtual);
+        double custoExpedicao = transportadoras.stream()
+                .mapToDouble(transportadora -> transportadora.calcularCustoExpedicao(encomendaAtual))
+                .sum();
 
         return totalPrecoArtigos + custoExpedicao;
+    }
+
+
+    public List<String> listarArtigosEncomenda() {
+        if (encomendaAtual == null) {
+            return new ArrayList<>();
+        }
+
+        List<String> artigosEncomenda = new ArrayList<>();
+        List<Artigo> artigos = encomendaAtual.getArtigos();
+
+        for (Artigo artigo : artigos) {
+            artigosEncomenda.add(artigo.toString());
+        }
+
+        return artigosEncomenda;
+    }
+
+    public void removerArtigoEncomenda(String codigoArtigo) {
+        if (encomendaAtual == null) {
+            return;
+        }
+
+        for (Artigo artigo : encomendaAtual.getArtigos()) {
+            if (artigo.getCodigo().equals(codigoArtigo)) {
+                artigos.removeIf(a -> a.getCodigo().equals(codigoArtigo));
+                encomendaAtual.getArtigos().remove(artigo);
+                return;
+            }
+        }
+    }
+
+    public String getVendedorComMaiorFaturacao(LocalDate dataInicio, LocalDate dataFim) {
+        Map<String, Double> vendedoresFaturacao = new HashMap<>();
+
+        for (Encomenda encomenda : encomendas) {
+            LocalDate dataCriacao = encomenda.getDataCriacao();
+            if (dataCriacao.isAfter(dataInicio) && dataCriacao.isBefore(dataFim) && encomenda.getEstado() == Encomenda.Estado.FINALIZADA) {
+                Utilizador vendedor = encomenda.getUtilizador();
+                double faturacaoVendedor = encomenda.getPrecoFinal();
+
+                vendedoresFaturacao.put(vendedor.getCodigo(), vendedoresFaturacao.getOrDefault(vendedor.getCodigo(), 0.0) + faturacaoVendedor);
+            }
+        }
+
+        double maiorFaturacao = 0;
+        String vendedorComMaiorFaturacao = "";
+
+        for (Map.Entry<String, Double> entry : vendedoresFaturacao.entrySet()) {
+            if (entry.getValue() > maiorFaturacao) {
+                maiorFaturacao = entry.getValue();
+                vendedorComMaiorFaturacao = entry.getKey();
+            }
+        }
+
+        return vendedorComMaiorFaturacao;
+    }
+
+    public void adicionarTransportadora(String nome, double valorBasePequeno, double valorBaseMedio, double valorBaseGrande, double margemLucro, boolean isPremium) {
+        Transportadora novaTransportadora = new Transportadora(nome, valorBasePequeno, valorBaseMedio, valorBaseGrande, margemLucro, isPremium);
+        transportadoras.add(novaTransportadora);
+    }
+
+    public String obterDetalhesTransportadora(String codigoTransportadora) {
+        for (Transportadora transportadora : transportadoras) {
+            if (transportadora.getCodigo().equals(codigoTransportadora)) {
+                return transportadora.toString();
+            }
+        }
+        return null;
+    }
+
+    public void finalizarEncomenda() throws EncomendaNaoExistenteException {
+        if (encomendaAtual != null) {
+            encomendaAtual.finalizarEncomenda();
+            encomendas.add(encomendaAtual);
+            encomendaAtual = null;
+
+        } else {
+            throw new EncomendaNaoExistenteException("Não há encomenda em andamento.");
+        }
+    }
+
+    public String getTransportadoraComMaiorQuantidadeArtigosFaturados(LocalDate dataInicio, LocalDate dataFim) {
+        Map<String, Integer> transportadorasQuantidadeArtigos = new HashMap<>();
+
+        for (Encomenda encomenda : encomendas) {
+            LocalDate dataCriacao = encomenda.getDataCriacao();
+            if (dataCriacao.isAfter(dataInicio) && dataCriacao.isBefore(dataFim) && encomenda.getEstado() == Encomenda.Estado.FINALIZADA) {
+                List<Artigo> artigosEncomenda = encomenda.getArtigos();
+                for (Artigo artigo : artigosEncomenda) {
+                    Transportadora transportadora = artigo.getTransportadora();
+                    int quantidadeArtigosFaturados = transportadorasQuantidadeArtigos.getOrDefault(transportadora.getCodigo(), 0);
+                    transportadorasQuantidadeArtigos.put(transportadora.getCodigo(), quantidadeArtigosFaturados + 1);
+                }
+            }
+        }
+
+        int maiorQuantidadeArtigos = 0;
+        String transportadoraComMaiorQuantidadeArtigos = "";
+
+        for (Map.Entry<String, Integer> entry : transportadorasQuantidadeArtigos.entrySet()) {
+            if (entry.getValue() > maiorQuantidadeArtigos) {
+                maiorQuantidadeArtigos = entry.getValue();
+                transportadoraComMaiorQuantidadeArtigos = entry.getKey();
+            }
+        }
+
+        return transportadoraComMaiorQuantidadeArtigos;
+    }
+
+
+    public List<String> listarEncomendasUtilizador(String emailUtilizador) {
+        List<String> encomendasUtilizador = new ArrayList<>();
+
+        for (Encomenda encomenda : encomendas) {
+            Utilizador utilizador = encomenda.getUtilizador();
+            if (utilizador.getEmail().equals(emailUtilizador)) {
+                encomendasUtilizador.add(encomenda.toString());
+            }
+        }
+
+        return encomendasUtilizador;
+    }
+
+    public double calcularFaturacaoUtilizador(Utilizador utilizador) {
+        double faturacaoTotal = 0.0;
+
+        for (Artigo artigo : utilizador.getArtigosVendidos()) {
+            faturacaoTotal += artigo.getPrecoFinal();
+        }
+
+        return faturacaoTotal;
+    }
+
+
+    public List<String> getUtilizadoresOrdenadosPorFaturacao() {
+        List<Utilizador> utilizadoresOrdenados = new ArrayList<>(utilizadores);
+        utilizadoresOrdenados.sort(Comparator.comparingDouble(this::calcularFaturacaoUtilizador).reversed());
+
+        List<String> utilizadoresOrdenadosString = new ArrayList<>();
+
+        for (Utilizador utilizador : utilizadoresOrdenados) {
+            double faturacao = calcularFaturacaoUtilizador(utilizador);
+            utilizadoresOrdenadosString.add(utilizador.getNome() + " - Faturação: " + faturacao);
+        }
+
+        return utilizadoresOrdenadosString;
+    }
+
+    public double calcularFaturacaoVintage() {
+        double faturacaoTotal = 0.0;
+        for (Artigo artigo : artigos) {
+            if (artigo.isVendido()) {
+                if (artigo.isNovo()) {
+                    faturacaoTotal += 0.5;
+                } else {
+                    faturacaoTotal += 0.25;
+                }
+            }
+        }
+        return faturacaoTotal;
     }
 
 

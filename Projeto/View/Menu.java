@@ -1,6 +1,8 @@
 package Projeto.View;
 import Projeto.Controllers.*;
+import Projeto.Exceptions.EncomendaNaoExistenteException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,7 +13,7 @@ public class Menu {
     private enum State {
         INICIAL, LOGIN, REGISTAR, PRINCIPAL, GERIR,
         ADICIONAR, APAGAR, COMPRAR, VER_ENCOMENDA, FINALIZAR,
-        ESTATISTICAS, AVANCAR, SAIR
+        ESTATISTICAS, AVANCAR, SAIR, TRANSPORTADORA
     }
 
     ;
@@ -19,24 +21,12 @@ public class Menu {
     private final Scanner scanner;
     private State state = State.INICIAL;
 
-    private UtilizadorController utilizadorController;
-    private ArtigoController artigoController;
-
-    private EncomendaController encomendaController;
-
-    private TransportadoraController transportadoraController;
-
     private MainController mainController;
 
     private int count = 0; // Inicializa a variável count com zero
 
     public Menu() {
         this.scanner = new Scanner(System.in);
-        this.utilizadorController = new UtilizadorController();
-        this.encomendaController = new EncomendaController();
-        this.artigoController = new ArtigoController(this.encomendaController);
-        this.transportadoraController = new TransportadoraController();
-        this.encomendaController.criarEncomenda("someCodigo");
         this.mainController = new MainController();
     }
 
@@ -71,8 +61,17 @@ public class Menu {
                 case VER_ENCOMENDA:
                     displayVerEncomendaSubMenu();
                     break;
+                case TRANSPORTADORA:
+                    displayVerTransportadorasSubMenu();
+                    break;
                 case FINALIZAR:
-                    // TODO - Finalizar a encomenda no controller
+                    try {
+                    mainController.finalizarEncomenda();
+                } catch (EncomendaNaoExistenteException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                    System.out.println("Encomenda finalizada com sucesso!");
                     break;
                 case ESTATISTICAS:
                     displayEstatisticasSubMenu();
@@ -88,9 +87,10 @@ public class Menu {
         System.out.println("\nMENU INICIAL - Vintage Marketplace");
         System.out.println("1. Login");
         System.out.println("2. Registar");
-        System.out.println("3. Estatisticas");
-        System.out.println("4. Avançar o tempo");
-        System.out.println("5. Sair");
+        System.out.println("3. Transportadora");
+        System.out.println("4. Estatisticas");
+        System.out.println("5. Avançar o tempo");
+        System.out.println("6. Sair");
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
 
@@ -102,12 +102,15 @@ public class Menu {
                 this.state = State.REGISTAR;
                 break;
             case 3:
-                this.state = State.ESTATISTICAS;
+                this.state = State.TRANSPORTADORA;
                 break;
             case 4:
-                this.state = State.AVANCAR;
+                this.state = State.ESTATISTICAS;
                 break;
             case 5:
+                this.state = State.AVANCAR;
+                break;
+            case 6:
                 this.state = State.SAIR;
                 break;
             default:
@@ -182,7 +185,6 @@ public class Menu {
                 break;
             case 5:
                 this.state = State.INICIAL;
-                utilizadorController.setUtilizadorAtual(null);
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -256,6 +258,51 @@ public class Menu {
         this.state = State.PRINCIPAL;
     }
 
+    public void displayVerTransportadorasSubMenu() {
+        System.out.println("\n--- Ver Transportadoras ---");
+        System.out.println("1. Criar uma transportadora");
+        System.out.println("2. Listar transportadoras disponíveis");
+        System.out.println("2. Detalhes de uma transportadora");
+        System.out.print("Digite a opção desejada: ");
+        int input = scanner.nextInt();
+        scanner.nextLine(); // Consumes the newline left-over
+
+        switch (input) {
+
+            case 1:
+                criarTransportadora();
+                break;
+            case 2:
+                // Listar transportadoras disponíveis (vindo do controller)
+                List<String> transportadorasDisponiveis = mainController.listarTransportadoraDisponiveis();
+                if (transportadorasDisponiveis.isEmpty()) {
+                    System.out.println("Não há transportadoras disponíveis.");
+                } else {
+                    System.out.println("Transportadoras disponíveis:");
+                    for (String transportadora : transportadorasDisponiveis) {
+                        System.out.println(transportadora);
+                    }
+                }
+                break;
+            case 3:
+                // Detalhes de uma transportadora
+                System.out.print("Digite o código da transportadora: ");
+                String codigoTransportadora = scanner.nextLine();
+                // Obter detalhes da transportadora (vindo do controller)
+                String detalhesTransportadora = mainController.obterDetalhesTransportadora(codigoTransportadora);
+                if (detalhesTransportadora == null) {
+                    System.out.println("Transportadora não encontrada.");
+                } else {
+                    System.out.println("Detalhes da transportadora:");
+                    System.out.println(detalhesTransportadora);
+                }
+                break;
+            default:
+                System.out.println("Opção inválida. Por favor, tente novamente.");
+                break;
+        }
+        this.state = State.INICIAL;
+    }
 
     public void displayVerEncomendaSubMenu() {
         System.out.println("\n--- Ver encomenda ---");
@@ -269,28 +316,26 @@ public class Menu {
         switch (input) {
             case 1:
                 // Mostrar preço total (vindo do controller)
-                double precoTotal = mainController.getPrecoTotal();
+                double precoTotal = mainController.getPrecoTotalEncomenda();
                 System.out.println("Preço total da encomenda: " + precoTotal);
                 break;
             case 2:
                 // Listar artigos (vindo do controller)
-                List<Artigo> artigos = encomendaController.listarArtigos();
-                for (Artigo artigo : artigos) {
-                    System.out.println(artigo);
+                List<String> artigosEncomenda = mainController.listarArtigosEncomenda();
+                if (artigosEncomenda.isEmpty()) {
+                    System.out.println("A encomenda não contém artigos.");
+                } else {
+                    System.out.println("Artigos da encomenda:");
+                    for (String artigo : artigosEncomenda) {
+                        System.out.println(artigo);
+                    }
                 }
                 break;
             case 3:
-                // Listar artigos (vindo do controller)
-                System.out.print("Enter the código do artigo a apagar: ");
+                // Remover artigo da encomenda
+                System.out.print("Digite o código do artigo a ser removido: ");
                 String codigoArtigo = scanner.nextLine();
-
-                // Remover artigo da encomenda no controller
-                boolean sucesso = encomendaController.removerArtigo(codigoArtigo);
-                if (sucesso) {
-                    System.out.println("Artigo removido com sucesso.");
-                } else {
-                    System.out.println("Artigo não encontrado.");
-                }
+                mainController.removerArtigoEncomenda(codigoArtigo);
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -310,29 +355,64 @@ public class Menu {
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
         scanner.nextLine(); // consume the newline
+        LocalDate dataFim = LocalDate.now();
 
         switch (input) {
             case 1:
-                System.out.println("Utilizador que mais facturou: " + utilizadorController.getUtilizadorQueMaisFaturou());
+                System.out.print("Digite a data de início (formato: AAAA-MM-DD): ");
+                String dataInicioStr = scanner.nextLine();
+                LocalDate dataInicio = LocalDate.parse(dataInicioStr);
+
+                String utilizadorMaiorFaturacao = mainController.getVendedorComMaiorFaturacao(dataInicio,dataFim);
+                if (!utilizadorMaiorFaturacao.isEmpty()) {
+                    System.out.println("Utilizador que mais faturou: " + utilizadorMaiorFaturacao);
+                } else {
+                    System.out.println("Não há utilizadores com faturação.");
+                }
                 break;
             case 2:
-                System.out.println("Transportadora com maior volume de facturação: " + transportadoraController.getTransportadoraComMaiorVolumeDeFaturacao());
+
+                System.out.print("Digite a data de início (formato: AAAA-MM-DD): ");
+                String dataInicioStr2 = scanner.nextLine();
+                LocalDate dataInicio2 = LocalDate.parse(dataInicioStr2);
+                String transportadoraMaiorFaturacao = mainController.getTransportadoraComMaiorQuantidadeArtigosFaturados(dataInicio2,dataFim);
+                if (!transportadoraMaiorFaturacao.isEmpty()) {
+                    System.out.println("Transportadora com maior volume de faturação: " + transportadoraMaiorFaturacao);
+                } else {
+                    System.out.println("Não há transportadoras com faturação.");
+                }
                 break;
+
             case 3:
                 System.out.print("Digite o email do utilizador: ");
                 String emailUtilizador = scanner.nextLine();
-                Utilizador utilizador = utilizadorController.obterUtilizadorPorEmail(emailUtilizador);
-                if (utilizador != null) {
-                    System.out.println("Encomendas do utilizador: " + utilizadorController.listarEncomendasDeUtilizador(utilizador));
+
+                List<String> encomendasUtilizador = mainController.listarEncomendasUtilizador(emailUtilizador);
+                if (!encomendasUtilizador.isEmpty()) {
+                    System.out.println("Encomendas do utilizador:");
+                    for (String encomenda : encomendasUtilizador) {
+                        System.out.println(encomenda);
+                    }
                 } else {
-                    System.out.println("Utilizador não encontrado.");
+                    System.out.println("Não há encomendas do utilizador.");
                 }
                 break;
+
             case 4:
-                System.out.println("Ordenação dos maiores compradores/vendedores: " + utilizadorController.ordenarUtilizadoresPorVendas());
+                List<String> utilizadoresOrdenados = mainController.getUtilizadoresOrdenadosPorFaturacao();
+                if (!utilizadoresOrdenados.isEmpty()) {
+                    System.out.println("Ordenação dos maiores compradores/vendedores:");
+                    for (String utilizador : utilizadoresOrdenados) {
+                        System.out.println(utilizador);
+                    }
+                } else {
+                    System.out.println("Não há utilizadores com faturação.");
+                }
                 break;
+
             case 5:
-                System.out.println("Dinheiro ganho pelo Vintage: " + VintageController.getDinheiroGanho());
+                double faturacaoVintage = mainController.calcularFaturacaoVintage();
+                System.out.println("Dinheiro ganho pelo Vintage: " + faturacaoVintage);
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -368,6 +448,29 @@ public class Menu {
         this.state = State.PRINCIPAL;
     }
 
+    public void criarTransportadora() {
+        // Prompt the user for transportadora details
+        System.out.print("Digite o nome da transportadora: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite o valor base para itens pequenos: ");
+        double valorBasePequeno = scanner.nextDouble();
+        System.out.print("Digite o valor base para itens médios: ");
+        double valorBaseMedio = scanner.nextDouble();
+        System.out.print("Digite o valor base para itens grandes: ");
+        double valorBaseGrande = scanner.nextDouble();
+        System.out.print("Digite a margem de lucro: ");
+        double margemLucro = scanner.nextDouble();
+        System.out.print("É uma transportadora premium? (S/N): ");
+        String isPremiumStr = scanner.next();
+        boolean isPremium = isPremiumStr.equalsIgnoreCase("S");
+
+        // Create the transportadora
+        mainController.adicionarTransportadora(nome, valorBasePequeno, valorBaseMedio, valorBaseGrande, margemLucro, isPremium);
+
+        System.out.println("Transportadora criada com sucesso!");
+    }
+
+
     public void createSapatilhasArtigo() {
         scanner.nextLine(); // Limpar o buffer de entrada
         System.out.print("Enter the descrição: ");
@@ -398,6 +501,7 @@ public class Menu {
             for (String transportador : transportadoras) {
                 System.out.println(transportador);
             }
+            scanner.nextLine();
             System.out.print("Enter o código da transportadora: ");
             String transportadora = scanner.nextLine();
 
@@ -413,6 +517,7 @@ public class Menu {
                 mainController.adicionarSapatilhaAoUtilizador(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium, transportadora);
             }
         }
+        System.out.println("ADICIONADO COM SUCESSO");
     }
 
 
@@ -428,6 +533,7 @@ public class Menu {
         boolean isNovo = scanner.nextBoolean();
         System.out.print("Enter the tamanho (S, M, L, XL): ");
         String tamanho = scanner.nextLine();
+        scanner.nextLine();
         System.out.print("Enter the padrão (LISO, RISCAS, PALMEIRAS): ");
         String padrao = scanner.nextLine();
 
@@ -476,6 +582,7 @@ public class Menu {
         boolean isPremium = scanner.nextBoolean();
         System.out.print("Enter the valorização anual: ");
         double valorizacaoAnual = scanner.nextDouble();
+        scanner.nextLine();
         System.out.print("Is it new? (true/false): ");
         boolean isNovo = scanner.nextBoolean();
 
