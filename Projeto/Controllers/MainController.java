@@ -28,6 +28,8 @@ public class MainController implements Serializable {
         this.encomendaAtual = null;
     }
 
+
+
     public void adicionarUtilizador(String email, String nome, String morada, String numeroFiscal) throws UtilizadorExistenteException {
         boolean utilizadorExistente = utilizadores.stream()
                 .anyMatch(utilizador -> utilizador.getEmail().equals(email));
@@ -42,6 +44,7 @@ public class MainController implements Serializable {
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getEmail().equals(email)) {
                 utilizadorAtual = utilizador;
+                this.encomendaAtual = new Encomenda(utilizadorAtual);
                 return; //
             }
         }
@@ -52,29 +55,30 @@ public class MainController implements Serializable {
                                                double avaliacaoEstado , int numDonosAnteriores, int tamanho, boolean temAtacadores,
                                                String cor, Year dataLancamentoColecao, boolean isPremium, String transportadora) {
 
+
         Transportadora transportadoraAtual = null;
         for (Transportadora transportadoraItem : transportadoras) {
-            if (transportadoraItem.getNome().equals(transportadora)) {
+            if (transportadoraItem.getCodigo().equals(transportadora)) {
                 transportadoraAtual = transportadoraItem;
                 break;
             }
         }
 
         if (transportadoraAtual == null) {
-            // handle the case where the transportadora is not found
+            System.out.println("Transportadora " + transportadora + " não encontrada");
             return;
         }
-
 
         Sapatilha novaSapatilha = new Sapatilha(descricao, marca, precoBase, isNovo,false, avaliacaoEstado, numDonosAnteriores, 0,tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium, utilizadorAtual.getCodigo(), transportadoraAtual);
         artigos.add(novaSapatilha);
     }
 
+
     public void adicionarTShirtAoUtilizador(String descricao, String marca, double precoBase, boolean isNovo, int avaliacaoEstado, int numDonosAnteriores, String tamanho, String padrao, String transportadora) {
 
         Transportadora transportadoraAtual = null;
         for (Transportadora transportadoraItem : transportadoras) {
-            if (transportadoraItem.getNome().equals(transportadora)) {
+            if (transportadoraItem.getCodigo().equals(transportadora)) {
                 transportadoraAtual = transportadoraItem;
                 break;
             }
@@ -85,15 +89,27 @@ public class MainController implements Serializable {
             return;
         }
 
-        TShirt novaTShirt = new TShirt(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, tamanho, padrao, utilizadorAtual.getCodigo(), transportadoraAtual);
-        artigos.add(novaTShirt);
+        try {
+            TShirt.Tamanho tamanhoEnum = TShirt.Tamanho.valueOf(tamanho.trim().toUpperCase());
+            TShirt.Padrao padraoEnum = TShirt.Padrao.valueOf(padrao.trim().toUpperCase());
+            System.out.println(padraoEnum);
+            System.out.println(tamanhoEnum);
+            TShirt novaTShirt = new TShirt(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, tamanhoEnum, padraoEnum, utilizadorAtual.getCodigo(), transportadoraAtual);
+            artigos.add(novaTShirt);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid size or pattern provided");
+            System.out.println("Size: " + tamanho + ", Pattern: " + padrao);
+            e.printStackTrace();
+        }
     }
+
+
 
     public void adicionarMalaAoUtilizador(String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual, String transportadora) {
 
         Transportadora transportadoraAtual = null;
         for (Transportadora transportadoraItem : transportadoras) {
-            if (transportadoraItem.getNome().equals(transportadora)) {
+            if (transportadoraItem.getCodigo().equals(transportadora)) {
                 transportadoraAtual = transportadoraItem;
                 break;
             }
@@ -111,14 +127,15 @@ public class MainController implements Serializable {
 
     public List<String> listarArtigosDoUtilizador() {
         List<String> listaArtigos = new ArrayList<>();
-        for (Artigo artigo : artigos) {
 
-            if (artigo.getDono().equals(utilizadorAtual.getCodigo())) {
+        for (Artigo artigo : artigos) {
+            if (artigo.getDono() != null && artigo.getDono().equals(utilizadorAtual.getCodigo())) {
                 listaArtigos.add(artigo.toString());
             }
         }
         return listaArtigos;
     }
+
 
 
     public void apagarArtigo(String codigoArtigo) {
@@ -275,8 +292,7 @@ public class MainController implements Serializable {
         if (encomendaAtual != null) {
             encomendaAtual.finalizarEncomenda();
             encomendas.add(encomendaAtual);
-            encomendaAtual = null;
-
+            encomendaAtual = new Encomenda(utilizadorAtual);
         } else {
             throw new EncomendaNaoExistenteException("Não há encomenda em andamento.");
         }

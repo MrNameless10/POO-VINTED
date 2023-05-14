@@ -35,11 +35,6 @@ public class Sapatilha extends ArtigoBase {
         }
     }
 
-    @Override
-    public String getDono() {
-        return null;
-    }
-
     public int getTamanho() {
         return tamanho;
     }
@@ -79,11 +74,6 @@ public class Sapatilha extends ArtigoBase {
     }
 
     @Override
-    public void setDono(String dono) {
-
-    }
-
-    @Override
     public void setEstado(String estado) {
 
     }
@@ -107,6 +97,7 @@ public class Sapatilha extends ArtigoBase {
     public String toString() {
         return "Sapatilha{" +
                 "tamanho=" + tamanho +
+                ", codigo=" + getCodigo() +
                 ", temAtacadores=" + temAtacadores +
                 ", cor='" + cor + '\'' +
                 ", dataLancamentoColecao=" + dataLancamentoColecao +
@@ -119,6 +110,7 @@ public class Sapatilha extends ArtigoBase {
                 ", numDonosAnteriores=" + numDonosAnteriores +
                 ", desconto=" + desconto +
                 ", isVendido=" + isVendido +
+                ", transportadora=" + transportadora +
                 ", dono='" + dono + '\'' +
                 '}';
     }

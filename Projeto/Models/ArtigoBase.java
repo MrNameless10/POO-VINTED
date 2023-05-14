@@ -153,6 +153,7 @@ public abstract class ArtigoBase implements Artigo {
         return transportadora;
     }
 
+
     public void setTransportadora(Transportadora transportadora) {
         this.transportadora = transportadora;
     }

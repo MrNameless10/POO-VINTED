@@ -78,10 +78,12 @@ public class Mala extends ArtigoBase {
         return isVendido;
     }
 
+
     @Override
     public String toString() {
         return "Mala{" +
                 "dimensao=" + dimensao +
+                ", codigo=" + getCodigo() +
                 ", material='" + material + '\'' +
                 ", anoColecao=" + anoColecao +
                 ", isPremium=" + isPremium +

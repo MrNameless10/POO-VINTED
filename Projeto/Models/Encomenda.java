@@ -15,6 +15,7 @@ public class Encomenda {
         PENDENTE, FINALIZADA, EXPEDIDA, DEVOLVIDA
     }
 
+    private static int count = 1; // Counter to generate unique IDs for each user
     private String codigo;
     private List<Artigo> artigos;
     private Dimensao dimensao;
@@ -26,8 +27,8 @@ public class Encomenda {
 
     private Utilizador utilizador;
 
-    public Encomenda(String codigo, Utilizador utilizador) {
-        this.codigo = codigo;
+    public Encomenda(Utilizador utilizador) {
+        this.codigo = "E" + (++count);
         this.artigos = new ArrayList<>();
         this.estado = Estado.PENDENTE;
         this.dataCriacao = LocalDate.now();

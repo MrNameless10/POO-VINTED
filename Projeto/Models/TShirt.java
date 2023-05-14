@@ -15,11 +15,11 @@ public class TShirt extends ArtigoBase {
     private Padrao padrao;
 
     public TShirt(String descricao, String marca, double precoBase, boolean isNovo, int avaliacaoEstado,
-                  int numDonosAnteriores, double desconto, boolean isVendido, String tamanho, String padrao, String dono, Transportadora transportadora) {
+                  int numDonosAnteriores, double desconto, boolean isVendido, Tamanho tamanho, Padrao padrao, String dono, Transportadora transportadora) {
         super(descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono, transportadora);
 
-        this.tamanho = Tamanho.valueOf(tamanho.toUpperCase());
-        this.padrao = Padrao.valueOf(padrao.toUpperCase());
+        this.tamanho = tamanho;
+        this.padrao = padrao;
 
     }
 
@@ -48,10 +48,12 @@ public class TShirt extends ArtigoBase {
         }
     }
 
+
     @Override
     public String toString() {
         return "TShirt{" +
                 "tamanho=" + tamanho +
+                ", codigo=" + getCodigo() +
                 ", padrao=" + padrao +
                 ", descricao='" + descricao + '\'' +
                 ", marca='" + marca + '\'' +

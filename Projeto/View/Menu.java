@@ -67,11 +67,11 @@ public class Menu {
                 case FINALIZAR:
                     try {
                     mainController.finalizarEncomenda();
+                        System.out.println("Encomenda finalizada com sucesso!");
                 } catch (EncomendaNaoExistenteException e) {
                     System.out.println(e.getMessage());
                 }
-
-                    System.out.println("Encomenda finalizada com sucesso!");
+                    this.state = State.PRINCIPAL;
                     break;
                 case ESTATISTICAS:
                     displayEstatisticasSubMenu();
@@ -198,6 +198,7 @@ public class Menu {
         System.out.println("1. Adicionar");
         System.out.println("2. Apagar");
         System.out.println("3. Listar meus artigos");
+        System.out.println("4. Voltar");
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
         scanner.nextLine(); // Consumes the newline left-over
@@ -216,6 +217,8 @@ public class Menu {
                     System.out.println(artigoString);
                 }
                 break;
+            case 4:
+                this.state = State.PRINCIPAL ;
             default:
                 System.out.println("Opção inválida.");
                 break;
@@ -531,6 +534,7 @@ public class Menu {
         double precoBase = scanner.nextDouble();
         System.out.print("Is it new? (true/false): ");
         boolean isNovo = scanner.nextBoolean();
+        scanner.nextLine(); // Limpar o buffer de entrada
         System.out.print("Enter the tamanho (S, M, L, XL): ");
         String tamanho = scanner.nextLine();
         scanner.nextLine();
@@ -594,6 +598,7 @@ public class Menu {
             for (String transportador : transportadoras) {
                 System.out.println(transportador);
             }
+            scanner.nextLine(); // Limpar o buffer de entrada
             System.out.print("Enter o código da transportadora: ");
             String transportadora = scanner.nextLine();
 
@@ -664,6 +669,7 @@ public class Menu {
     }
 
     public void displayComprarTshirtArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
         System.out.println("\n--- Comprar Tshirt ---");
 
         // Assuming you have a method to get all available Tshirts from mainController
@@ -686,6 +692,7 @@ public class Menu {
     }
 
     public void displayComprarMalaArtigo() {
+        scanner.nextLine(); // Limpar o buffer de entrada
         System.out.println("\n--- Comprar Mala ---");
 
         // Assuming you have a method to get all available Malas from mainController
