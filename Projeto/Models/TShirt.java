@@ -15,8 +15,8 @@ public class TShirt extends ArtigoBase {
     private Padrao padrao;
 
     public TShirt(String codigo, String descricao, String marca, double precoBase, boolean isNovo, int avaliacaoEstado,
-                  int numDonosAnteriores, double desconto, boolean isVendido, Tamanho tamanho, Padrao padrao) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
+                  int numDonosAnteriores, double desconto, boolean isVendido, Tamanho tamanho, Padrao padrao, String dono) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono);
         this.tamanho = tamanho;
         this.padrao = padrao;
     }

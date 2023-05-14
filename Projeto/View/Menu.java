@@ -191,9 +191,10 @@ public class Menu {
         System.out.println("\n--- Gerir artigos ---");
         System.out.println("1. Adicionar");
         System.out.println("2. Apagar");
-        System.out.println("3. Listar artigos");
+        System.out.println("3. Listar meus artigos");
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
+        scanner.nextLine(); // Consumes the newline left-over
 
         switch (input) {
             case 1:
@@ -203,13 +204,22 @@ public class Menu {
                 this.state = State.APAGAR;
                 break;
             case 3:
-                utilizadorController.listarArtigosDoUtilizador(utilizadorAtual);
+                // Listar artigos do utilizador atual
+                List<Artigo> artigosDoUtilizador = artigoController.listarArtigosDoUtilizador(utilizadorAtual.getCodigo());
+                if (artigosDoUtilizador.isEmpty()) {
+                    System.out.println("Você não tem artigos.");
+                } else {
+                    for (Artigo artigo : artigosDoUtilizador) {
+                        System.out.println(artigo);
+                    }
+                }
                 break;
             default:
                 System.out.println("Opção inválida.");
                 break;
         }
     }
+
 
     public void displayApagarArtigo() {
         System.out.println("\n--- Apagar artigos ---");
@@ -333,6 +343,7 @@ public class Menu {
 
 
     public void displayAdicionarArtigoSubMenu() {
+
         System.out.println("\n--- Adicionar artigo ---");
         System.out.println("1. Sapatilhas");
         System.out.println("2. T-Shirts");
@@ -342,13 +353,13 @@ public class Menu {
 
         switch (input) {
             case 1:
-                createSapatilhasArtigo(artigoController);
+                createSapatilhasArtigo(artigoController, utilizadorController);
                 break;
             case 2:
-                createTShirtArtigo();
+                createTShirtArtigo(artigoController, utilizadorController);
                 break;
             case 3:
-                createMalaArtigo();
+                createMalaArtigo(artigoController, utilizadorController);
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -358,7 +369,8 @@ public class Menu {
         this.state = State.PRINCIPAL;
     }
 
-    public void createSapatilhasArtigo(ArtigoController artigoController) {
+    public void createSapatilhasArtigo(ArtigoController artigoController, UtilizadorController utilizadorController) {
+        Utilizador utilizadorAtual = utilizadorController.getUtilizadorAtual();
         scanner.nextLine(); // Limpar o buffer de entrada
         System.out.print("Enter the descrição: ");
         String descricao = scanner.nextLine();
@@ -385,7 +397,7 @@ public class Menu {
 
         if (isNovo) {
             // Sapatilha nova
-            Sapatilha novaSapatilha = new Sapatilha(codigo, descricao, marca, precoBase, isNovo, false, 0, 0, 0, tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium);
+            Sapatilha novaSapatilha = new Sapatilha(codigo, descricao, marca, precoBase, isNovo, false, 0, 0, 0, tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium, utilizadorAtual.getCodigo());
             artigoController.criarArtigo(novaSapatilha);
         } else {
             // Sapatilha usada
@@ -393,13 +405,14 @@ public class Menu {
             double avaliacaoEstado = scanner.nextDouble();
             System.out.print("Enter the número de donos anteriores: ");
             int numDonosAnteriores = scanner.nextInt();
-            Sapatilha novaSapatilha = new Sapatilha(codigo, descricao, marca, precoBase, isNovo, false, avaliacaoEstado, numDonosAnteriores, 0, tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium);
+            Sapatilha novaSapatilha = new Sapatilha(codigo, descricao, marca, precoBase, isNovo, false, avaliacaoEstado, numDonosAnteriores, 0, tamanho, temAtacadores, cor, dataLancamentoColecao, isPremium, utilizadorAtual.getCodigo());
             artigoController.criarArtigo(novaSapatilha);
         }
     }
 
 
-    public void createTShirtArtigo() {
+
+    public void createTShirtArtigo(ArtigoController artigoController, UtilizadorController utilizadorController) {
         scanner.nextLine(); // Limpar o buffer de entrada
         System.out.print("Enter the descrição: ");
         String descricao = scanner.nextLine();
@@ -416,10 +429,10 @@ public class Menu {
 
         // Supondo que temos um código gerado automaticamente para cada t-shirt
         String codigo = "T" + (++count);
-
+        String dono = utilizadorController.getUtilizadorAtual().getEmail();
         if (isNovo) {
             // TShirt nova
-            TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, tamanho, padrao);
+            TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, tamanho, padrao, dono);
             // Adicionar a nova t-shirt no controller
             artigoController.criarArtigo(novaTShirt);
         } else {
@@ -428,13 +441,15 @@ public class Menu {
             double avaliacaoEstado = scanner.nextDouble();
             System.out.print("Enter the número de donos anteriores: ");
             int numDonosAnteriores = scanner.nextInt();
-            TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, (int) avaliacaoEstado, numDonosAnteriores, 0, false, tamanho, padrao);
+            TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, (int) avaliacaoEstado, numDonosAnteriores, 0, false, tamanho, padrao, dono);
             // Adicionar a nova t-shirt no controller
             artigoController.criarArtigo(novaTShirt);
         }
     }
 
-    public void createMalaArtigo() {
+
+    public void createMalaArtigo(ArtigoController artigoController, UtilizadorController utilizadorController) {
+        Utilizador utilizadorAtual = utilizadorController.getUtilizadorAtual();
         scanner.nextLine(); // Limpar o buffer de entrada
         System.out.print("Enter the descrição: ");
         String descricao = scanner.nextLine();
@@ -461,7 +476,7 @@ public class Menu {
 
         if (isNovo) {
             // Mala nova
-            Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual);
+            Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual, utilizadorAtual.getCodigo());
             // Adicionar a nova mala no controller
             artigoController.criarArtigo(novaMala);
         } else {
@@ -470,11 +485,13 @@ public class Menu {
             double avaliacaoEstado = scanner.nextDouble();
             System.out.print("Enter the número de donos anteriores: ");
             int numDonosAnteriores = scanner.nextInt();
-            Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual);
+            Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual, utilizadorAtual.getCodigo());
             // Adicionar a nova mala no controller
             artigoController.criarArtigo(novaMala);
         }
     }
+
+
 
     public void displayComprarArtigosSubMenu() {
         System.out.println("\n--- Comprar artigos ---");

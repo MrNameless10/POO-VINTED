@@ -10,8 +10,9 @@ public class Mala extends ArtigoBase {
     private boolean isPremium;
     private double valorizacaoAnual;
 
-    public Mala(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
+    public Mala(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado,
+                int numDonosAnteriores, double desconto, boolean isVendido, int dimensao, String material, int anoColecao, boolean isPremium, double valorizacaoAnual, String dono) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono);
         this.dimensao = dimensao;
         this.material = material;
         this.anoColecao = anoColecao;

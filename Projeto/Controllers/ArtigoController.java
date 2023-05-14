@@ -3,6 +3,7 @@ package Projeto.Controllers;
 import Projeto.Models.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArtigoController {
     private List<Artigo> artigos;
@@ -83,7 +84,16 @@ public class ArtigoController {
                 .toList();
     }
 
-
+    public List<Artigo> listarArtigosDoUtilizador(String codigoUtilizador) {
+        List<Artigo> artigosDoUtilizador = new ArrayList<>();
+        for (Artigo artigo : artigos) {
+            String dono = artigo.getDono();
+            if (dono != null && dono.equals(codigoUtilizador)) {
+                artigosDoUtilizador.add(artigo);
+            }
+        }
+        return artigosDoUtilizador;
+    }
 
 
 }

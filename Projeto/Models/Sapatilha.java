@@ -9,8 +9,8 @@ public class Sapatilha extends ArtigoBase {
     private Year dataLancamentoColecao;
     private boolean isPremium;
 
-    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, boolean isVendido, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium) {
-        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido);
+    public Sapatilha(String codigo, String descricao, String marca, double precoBase, boolean isNovo, boolean isVendido, double avaliacaoEstado, int numDonosAnteriores, double desconto, int tamanho, boolean temAtacadores, String cor, Year dataLancamentoColecao, boolean isPremium, String dono) {
+        super(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, desconto, isVendido, dono);
         this.tamanho = tamanho;
         this.temAtacadores = temAtacadores;
         this.cor = cor;
