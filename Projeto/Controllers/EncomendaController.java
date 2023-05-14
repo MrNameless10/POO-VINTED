@@ -2,39 +2,38 @@ package Projeto.Controllers;
 
 import Projeto.Models.Artigo;
 import Projeto.Models.Encomenda;
-import Projeto.Models.Transportadora;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EncomendaController {
-    public Encomenda criarEncomenda(List<Artigo> artigos, String dimensaoEmbalagem, Transportadora transportadora) {
-        Encomenda encomenda = new Encomenda(artigos, dimensaoEmbalagem, transportadora);
-        encomenda.calcularPrecoFinal();
-        encomenda.calcularCustosExpedicao();
-        return encomenda;
+    private Encomenda encomendaAtual;
+
+    public EncomendaController() {
+        this.encomendaAtual = new Encomenda();
     }
 
-    public void adicionarArtigoEncomenda(Encomenda encomenda, Artigo artigo) {
-        encomenda.adicionarArtigo(artigo);
-        encomenda.calcularPrecoFinal();
-        encomenda.calcularCustosExpedicao();
+    public void adicionarArtigo(Artigo artigo) {
+        this.encomendaAtual.getArtigos().add(artigo);
     }
 
-    public void removerArtigoEncomenda(Encomenda encomenda, Artigo artigo) {
-        encomenda.removerArtigo(artigo);
-        encomenda.calcularPrecoFinal();
-        encomenda.calcularCustosExpedicao();
+    public void removerArtigo(String codigoArtigo) {
+        this.encomendaAtual.getArtigos().removeIf(artigo -> artigo.getCodigo().equals(codigoArtigo));
     }
 
-    public void finalizarEncomenda(Encomenda encomenda) {
-        encomenda.finalizarEncomenda();
+    public List<Artigo> listarArtigos() {
+        return new ArrayList<>(this.encomendaAtual.getArtigos());
     }
 
-    public void expedirEncomenda(Encomenda encomenda) {
-        encomenda.expedirEncomenda();
+    public double getPrecoTotal() {
+        return this.encomendaAtual.getArtigos().stream().mapToDouble(Artigo::getPrecoBase).sum();
     }
 
-    public void devolverEncomenda(Encomenda encomenda, int prazoDevolucao) {
-        encomenda.devolverEncomenda(prazoDevolucao);
+    public Encomenda getEncomendaAtual() {
+        return encomendaAtual;
+    }
+
+    public void setEncomendaAtual(Encomenda encomendaAtual) {
+        this.encomendaAtual = encomendaAtual;
     }
 }

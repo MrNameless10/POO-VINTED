@@ -1,62 +1,44 @@
 package Projeto.Controllers;
-import Projeto.Models.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import Projeto.Models.Transportadora;
+import Projeto.Models.Encomenda;
+
+import java.util.*;
 
 public class TransportadoraController {
-    private List<Transportadora> transportadoras;
+    private Map<Transportadora, List<Encomenda>> transportadorasEEncomendas;
 
     public TransportadoraController() {
-        this.transportadoras = new ArrayList<>();
+        this.transportadorasEEncomendas = new HashMap<>();
     }
 
-    public void adicionarTransportadora(Transportadora transportadora) {
-        transportadoras.add(transportadora);
+    public void adicionarTransportadora(String nome, double valorBasePequeno, double valorBaseMedio,
+                                        double valorBaseGrande, double margemLucro, boolean isPremium) {
+        Transportadora novaTransportadora = new Transportadora(nome, valorBasePequeno, valorBaseMedio,
+                valorBaseGrande, margemLucro, isPremium);
+        this.transportadorasEEncomendas.put(novaTransportadora, new ArrayList<>());
     }
 
-    public void removerTransportadora(Transportadora transportadora) {
-        transportadoras.remove(transportadora);
+    public List<Encomenda> obterEncomendasDaTransportadora(Transportadora transportadora) {
+        return this.transportadorasEEncomendas.get(transportadora);
     }
 
-    public Transportadora encontrarTransportadoraPorNome(String nome) {
-        for (Transportadora transportadora : transportadoras) {
-            if (transportadora.getNome().equalsIgnoreCase(nome)) {
-                return transportadora;
-            }
+    public void adicionarEncomendaATransportadora(Transportadora transportadora, Encomenda encomenda) {
+        List<Encomenda> encomendasDaTransportadora = this.transportadorasEEncomendas.get(transportadora);
+        if (encomendasDaTransportadora != null) {
+            encomendasDaTransportadora.add(encomenda);
         }
-        return null;
     }
 
-    public Transportadora criarTransportadora() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Criar Transportadora");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Valor Base Pequeno: ");
-        double valorBasePequeno = scanner.nextDouble();
-
-        System.out.print("Valor Base Médio: ");
-        double valorBaseMedio = scanner.nextDouble();
-
-        System.out.print("Valor Base Grande: ");
-        double valorBaseGrande = scanner.nextDouble();
-
-        System.out.print("Margem de Lucro: ");
-        double margemLucro = scanner.nextDouble();
-
-        return new Transportadora(nome, valorBasePequeno, valorBaseMedio, valorBaseGrande, margemLucro);
+    public List<Transportadora> obterTransportadoras() {
+        return new ArrayList<>(transportadorasEEncomendas.keySet());
     }
 
-    public double calcularPrecoExpedicao(Transportadora transportadora, Encomenda encomenda) {
-        if (transportadora == null) {
-            throw new IllegalArgumentException("Transportadora inválida.");
-        }
-        return transportadora.calcularPrecoExpedicao(encomenda);
+    public Transportadora getTransportadoraComMaiorVolumeDeFaturacao() {
+        return transportadorasEEncomendas.entrySet().stream()
+                .max(Comparator.comparingDouble(entry -> entry.getValue().stream()
+                        .mapToDouble(encomenda -> entry.getKey().calcularCustoExpedicao(encomenda)).sum()))
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
-
-
 }

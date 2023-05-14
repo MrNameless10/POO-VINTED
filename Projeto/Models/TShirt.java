@@ -39,7 +39,7 @@ public class TShirt extends ArtigoBase {
 
     @Override
     public double getPrecoFinal() {
-        else if (!isNovo && padrao != Padrao.LISO) {
+        if (!isNovo && padrao != Padrao.LISO) {
             return precoBase * 0.5;
         } else {
             return precoBase;

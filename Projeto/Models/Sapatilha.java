@@ -33,6 +33,16 @@ public class Sapatilha extends ArtigoBase {
         }
     }
 
+    @Override
+    public String getDono() {
+        return null;
+    }
+
+    @Override
+    public String getEstado() {
+        return null;
+    }
+
     public int getTamanho() {
         return tamanho;
     }
@@ -73,6 +83,26 @@ public class Sapatilha extends ArtigoBase {
     @Override
     public boolean isVendido() {
         return false;
+    }
+
+    @Override
+    public void setDono(String dono) {
+
+    }
+
+    @Override
+    public void setEstado(String estado) {
+
+    }
+
+    @Override
+    public void setIsNovo(boolean isNovo) {
+
+    }
+
+    @Override
+    public void setisVendido(boolean b) {
+
     }
 
     public void setPremium(boolean premium) {
