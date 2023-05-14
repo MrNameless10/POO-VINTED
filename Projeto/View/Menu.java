@@ -262,7 +262,7 @@ public class Menu {
         System.out.println("\n--- Ver Transportadoras ---");
         System.out.println("1. Criar uma transportadora");
         System.out.println("2. Listar transportadoras disponíveis");
-        System.out.println("2. Detalhes de uma transportadora");
+        System.out.println("3. Detalhes de uma transportadora");
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
         scanner.nextLine(); // Consumes the newline left-over
