@@ -68,12 +68,12 @@ public class Mala extends ArtigoBase {
 
     @Override
     public boolean isPremium() {
-        return false;
+        return isPremium;
     }
 
     @Override
     public boolean isVendido() {
-        return false;
+        return isVendido;
     }
 
     @Override

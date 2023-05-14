@@ -82,5 +82,17 @@ public class UtilizadorController {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
-}
+
+    public void listarArtigosDoUtilizador(Utilizador utilizador) {
+        List<Artigo> artigosDoUtilizador = utilizadoresEArtigos.getOrDefault(utilizador, new ArrayList<>());
+        System.out.println("\n--- Artigos do Utilizador ---");
+        if (artigosDoUtilizador.isEmpty()) {
+            System.out.println("O utilizador não possui artigos.");
+        } else {
+            for (Artigo artigo : artigosDoUtilizador) {
+                System.out.println(artigo.toString());
+            }
+        }
+    }
+
 }

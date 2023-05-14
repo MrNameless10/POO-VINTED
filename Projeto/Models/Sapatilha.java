@@ -38,11 +38,6 @@ public class Sapatilha extends ArtigoBase {
         return null;
     }
 
-    @Override
-    public String getEstado() {
-        return null;
-    }
-
     public int getTamanho() {
         return tamanho;
     }
@@ -75,10 +70,6 @@ public class Sapatilha extends ArtigoBase {
         this.dataLancamentoColecao = dataLancamentoColecao;
     }
 
-    @Override
-    public boolean isPremium() {
-        return isPremium;
-    }
 
     @Override
     public boolean isVendido() {
@@ -105,8 +96,9 @@ public class Sapatilha extends ArtigoBase {
 
     }
 
-    public void setPremium(boolean premium) {
-        isPremium = premium;
+    @Override
+    public boolean isPremium() {
+        return isPremium;
     }
 
     @Override

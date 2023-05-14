@@ -12,6 +12,8 @@ public abstract class ArtigoBase implements Artigo {
 
     protected boolean isVendido;
 
+    protected String dono;
+
     public ArtigoBase(String codigo, String descricao, String marca, double precoBase, boolean isNovo, double avaliacaoEstado, int numDonosAnteriores, double desconto, boolean isVendido) {
         this.codigo = codigo;
         this.descricao = descricao;
@@ -26,6 +28,14 @@ public abstract class ArtigoBase implements Artigo {
 
     public double getPrecoFinal() {
         return precoBase * (1 - desconto);
+    }
+
+    public String getDono() {
+        return dono;
+    }
+
+    public void setDono(String dono) {
+        this.dono = dono;
     }
 
     @Override
@@ -68,7 +78,7 @@ public abstract class ArtigoBase implements Artigo {
         return isNovo;
     }
 
-    public void setNovo(boolean novo) {
+    public void setIsNovo(boolean novo) {
         isNovo = novo;
     }
 
@@ -100,7 +110,28 @@ public abstract class ArtigoBase implements Artigo {
         return isVendido;
     }
 
-    public void setVendido(boolean vendido) {
+    public void setisVendido(boolean vendido) {
         isVendido = vendido;
     }
+
+    @Override
+    public double getEstado() {
+        return avaliacaoEstado;
+    }
+
+    public void setEstado(String estado) {
+        try {
+            double avaliacao = Double.parseDouble(estado);
+            setAvaliacaoEstado(avaliacao);
+        } catch (NumberFormatException e) {
+            System.out.println("Estado inválido. Não foi possível converter para double.");
+        }
+    }
+
+    @Override
+    public boolean isPremium() {
+        return false;
+    }
+
+
 }

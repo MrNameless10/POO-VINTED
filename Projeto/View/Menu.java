@@ -1,4 +1,4 @@
-package Projeto.Menu;
+package Projeto.View;
 import Projeto.Controllers.*;
 import Projeto.Models.*;
 
@@ -21,51 +21,59 @@ public class Menu {
     private UtilizadorController utilizadorController;
     private ArtigoController artigoController;
 
+    private EncomendaController encomendaController;
+
+    private TransportadoraController transportadoraController;
+
+    private int count = 0; // Inicializa a variável count com zero
 
     public Menu() {
         this.scanner = new Scanner(System.in);
         this.utilizadorController = new UtilizadorController();
-        this.artigoController = new ArtigoController();
-
+        this.encomendaController = new EncomendaController();
+        this.artigoController = new ArtigoController(this.encomendaController);
+        this.transportadoraController = new TransportadoraController();
+        this.encomendaController.criarEncomenda("someCodigo");
     }
+
 
     public void run() {
         while (this.state != State.SAIR) {
             switch (this.state) {
-                case State.INICIAL:
+                case INICIAL:
                     displayMenu();
                     break;
-                case State.REGISTAR:
+                case REGISTAR:
                     displayRegistarSubMenu();
                     break;
-                case State.LOGIN:
+                case LOGIN:
                     displayLoginSubMenu();
                     break;
-                case State.PRINCIPAL:
+                case PRINCIPAL:
                     displayUtilizadorMenu();
                     break;
-                case State.GERIR:
+                case GERIR:
                     displayGerirArtigosSubMenu();
                     break;
-                case State.ADICIONAR:
+                case ADICIONAR:
                     displayAdicionarArtigoSubMenu();
                     break;
-                case State.APAGAR:
+                case APAGAR:
                     displayApagarArtigo();
                     break;
-                case State.COMPRAR:
+                case COMPRAR:
                     displayComprarArtigosSubMenu();
                     break;
-                case State.VER_ENCOMENDA:
+                case VER_ENCOMENDA:
                     displayVerEncomendaSubMenu();
                     break;
-                case State.FINALIZAR:
+                case FINALIZAR:
                     // TODO - Finalizar a encomenda no controller
                     break;
-                case State.ESTATISTICAS:
+                case ESTATISTICAS:
                     displayEstatisticasSubMenu();
                     break;
-                case State.AVANCAR:
+                case AVANCAR:
                     // TODO - Avançar tempo no controller
                     break;
             }
@@ -109,23 +117,25 @@ public class Menu {
         System.out.println("\n--- Registar ---");
         System.out.print("Enter the e-mail: ");
         String email = scanner.nextLine();
-        System.out.print("Enter the nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Enter the morada: ");
-        String morada = scanner.nextLine();
-        System.out.print("Enter the número Fiscal: ");
-        String nif = scanner.nextLine();
 
-        // Verificar se utilizador foi criado com sucesso (email nao se pode repetir)
         Utilizador novoUtilizador = utilizadorController.obterUtilizadorPorEmail(email);
         if (novoUtilizador != null) {
-            System.out.println("Utilizador criado com sucesso!");
+            System.out.println("O utilizador já existe. Por favor, tente novamente com um e-mail diferente.");
         } else {
-            System.out.println("Ocorreu um erro ao criar o utilizador. Por favor, tente novamente.");
+            System.out.print("Enter the nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Enter the morada: ");
+            String morada = scanner.nextLine();
+            System.out.print("Enter the número Fiscal: ");
+            String nif = scanner.nextLine();
+
+            utilizadorController.adicionarUtilizador(email, nome, morada, nif);
+            System.out.println("Utilizador criado com sucesso!");
         }
 
         this.state = State.INICIAL;
     }
+
 
     public void displayLoginSubMenu() {
 
@@ -177,9 +187,11 @@ public class Menu {
     }
 
     public void displayGerirArtigosSubMenu() {
+        Utilizador utilizadorAtual = utilizadorController.getUtilizadorAtual();
         System.out.println("\n--- Gerir artigos ---");
         System.out.println("1. Adicionar");
         System.out.println("2. Apagar");
+        System.out.println("3. Listar artigos");
         System.out.print("Digite a opção desejada: ");
         int input = scanner.nextInt();
 
@@ -189,6 +201,9 @@ public class Menu {
                 break;
             case 2:
                 this.state = State.APAGAR;
+                break;
+            case 3:
+                utilizadorController.listarArtigosDoUtilizador(utilizadorAtual);
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -219,7 +234,7 @@ public class Menu {
 
         if (artigoAApagar != null) {
             // Apagar artigo no controller.
-            ArtigoController.apagarArtigo(artigoAApagar);
+            artigoController.apagarArtigo(artigoAApagar);
 
             // Remover artigo do utilizador.
             utilizadorController.removerArtigoDoUtilizador(utilizadorAtual, artigoAApagar);
@@ -245,12 +260,12 @@ public class Menu {
         switch (input) {
             case 1:
                 // Mostrar preço total (vindo do controller)
-                double precoTotal = EncomendaController.getPrecoTotal();
+                double precoTotal = encomendaController.getPrecoTotal();
                 System.out.println("Preço total da encomenda: " + precoTotal);
                 break;
             case 2:
                 // Listar artigos (vindo do controller)
-                List<Artigo> artigos = EncomendaController.listarArtigos();
+                List<Artigo> artigos = encomendaController.listarArtigos();
                 for (Artigo artigo : artigos) {
                     System.out.println(artigo);
                 }
@@ -261,7 +276,7 @@ public class Menu {
                 String codigoArtigo = scanner.nextLine();
 
                 // Remover artigo da encomenda no controller
-                boolean sucesso = EncomendaController.removerArtigo(codigoArtigo);
+                boolean sucesso = encomendaController.removerArtigo(codigoArtigo);
                 if (sucesso) {
                     System.out.println("Artigo removido com sucesso.");
                 } else {
@@ -292,7 +307,7 @@ public class Menu {
                 System.out.println("Utilizador que mais facturou: " + utilizadorController.getUtilizadorQueMaisFaturou());
                 break;
             case 2:
-                System.out.println("Transportadora com maior volume de facturação: " + TransportadoraController.getTransportadoraComMaiorVolumeDeFaturacao());
+                System.out.println("Transportadora com maior volume de facturação: " + transportadoraController.getTransportadoraComMaiorVolumeDeFaturacao());
                 break;
             case 3:
                 System.out.print("Digite o email do utilizador: ");
@@ -327,7 +342,7 @@ public class Menu {
 
         switch (input) {
             case 1:
-                createSapatilhasArtigo();
+                createSapatilhasArtigo(artigoController);
                 break;
             case 2:
                 createTShirtArtigo();
@@ -406,7 +421,7 @@ public class Menu {
             // TShirt nova
             TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, tamanho, padrao);
             // Adicionar a nova t-shirt no controller
-            ArtigoController.criarArtigo(novaTShirt);
+            artigoController.criarArtigo(novaTShirt);
         } else {
             // TShirt usada
             System.out.print("Enter the avaliação estado: ");
@@ -415,7 +430,7 @@ public class Menu {
             int numDonosAnteriores = scanner.nextInt();
             TShirt novaTShirt = new TShirt(codigo, descricao, marca, precoBase, isNovo, (int) avaliacaoEstado, numDonosAnteriores, 0, false, tamanho, padrao);
             // Adicionar a nova t-shirt no controller
-            ArtigoController.criarArtigo(novaTShirt);
+            artigoController.criarArtigo(novaTShirt);
         }
     }
 
@@ -448,7 +463,7 @@ public class Menu {
             // Mala nova
             Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, 0, 0, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual);
             // Adicionar a nova mala no controller
-            ArtigoController.criarArtigo(novaMala);
+            artigoController.criarArtigo(novaMala);
         } else {
             // Mala usada
             System.out.print("Enter the avaliação estado: ");
@@ -457,7 +472,7 @@ public class Menu {
             int numDonosAnteriores = scanner.nextInt();
             Mala novaMala = new Mala(codigo, descricao, marca, precoBase, isNovo, avaliacaoEstado, numDonosAnteriores, 0, false, dimensao, material, anoColecao, isPremium, valorizacaoAnual);
             // Adicionar a nova mala no controller
-            ArtigoController.criarArtigo(novaMala);
+            artigoController.criarArtigo(novaMala);
         }
     }
 
@@ -492,7 +507,7 @@ public class Menu {
         System.out.println("\n--- Comprar Sapatilhas ---");
 
         // Listar todas as sapatilhas disponíveis para comprar (vindas do controller como string)
-        List<Sapatilha> sapatilhasDisponiveis = ArtigoController.obterSapatilhasDisponiveis();
+        List<Sapatilha> sapatilhasDisponiveis = artigoController.obterSapatilhasDisponiveis();
         for (Sapatilha sapatilha : sapatilhasDisponiveis) {
             System.out.println(sapatilha);
         }
@@ -501,7 +516,7 @@ public class Menu {
         String codigoArtigo = scanner.nextLine();
 
         // Adicionar artigo à encomenda no controller
-        ArtigoController.adicionarArtigoEncomenda(codigoArtigo);
+        artigoController.adicionarArtigoEncomenda(codigoArtigo);
     }
 
     public void displayComprarTshirtArtigo() {
@@ -509,7 +524,7 @@ public class Menu {
         System.out.println("\n--- Comprar Tshirt ---");
 
         // Listar todas as tshirts disponíveis para comprar (vindas do controller como string)
-        List<TShirt> tshirtsDisponiveis = ArtigoController.obterTshirtsDisponiveis();
+        List<TShirt> tshirtsDisponiveis = artigoController.obterTshirtsDisponiveis();
         for (TShirt tshirt : tshirtsDisponiveis) {
             System.out.println(tshirt);
         }
@@ -518,7 +533,7 @@ public class Menu {
         String codigoArtigo = scanner.nextLine();
 
         // Adicionar artigo à encomenda no controller
-        ArtigoController.adicionarArtigoEncomenda(codigoArtigo);
+        artigoController.adicionarArtigoEncomenda(codigoArtigo);
     }
 
 
@@ -527,7 +542,7 @@ public class Menu {
         System.out.println("\n--- Comprar Mala ---");
 
         // Listar todas as malas disponíveis para comprar (vindas do controller como string)
-        List<Mala> malasDisponiveis = ArtigoController.obterMalasDisponiveis();
+        List<Mala> malasDisponiveis = artigoController.obterMalasDisponiveis();
         for (Mala mala : malasDisponiveis) {
             System.out.println(mala);
         }
@@ -536,7 +551,7 @@ public class Menu {
         String codigoArtigo = scanner.nextLine();
 
         // Adicionar artigo à encomenda no controller
-        ArtigoController.adicionarArtigoEncomenda(codigoArtigo);
+        artigoController.adicionarArtigoEncomenda(codigoArtigo);
     }
 
 }

@@ -7,7 +7,7 @@ public interface Artigo {
     double getPrecoBase();
     double getPrecoFinal();
     String getDono();
-    String getEstado();
+    double getEstado();
     boolean isNovo();
     double getAvaliacaoEstado();
     int getNumDonosAnteriores();
@@ -19,10 +19,11 @@ public interface Artigo {
     void setMarca(String marca);
     void setPrecoBase(double precoBase);
     void setDono(String dono);
-    void setEstado(String estado);
     void setIsNovo(boolean isNovo);
     void setAvaliacaoEstado(double avaliacaoEstado);
     void setNumDonosAnteriores(int numDonosAnteriores);
     void setDesconto(double desconto);
     void setisVendido(boolean b);
+
+    boolean isPremium();
 }

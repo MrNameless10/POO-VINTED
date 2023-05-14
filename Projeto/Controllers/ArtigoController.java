@@ -53,6 +53,7 @@ public class ArtigoController {
         this.artigos.remove(artigo);
     }
 
+
     public void adicionarArtigoEncomenda(String codigoArtigo) {
         Artigo artigo = obterArtigoPorCodigo(codigoArtigo);
         if (artigo != null && !artigo.isVendido()) {

@@ -24,12 +24,12 @@ public class Encomenda {
     private Estado estado;
     private LocalDate dataCriacao;
 
-    public Encomenda(String codigo, Dimensao dimensao) {
+    public Encomenda(String codigo) {
         this.codigo = codigo;
         this.artigos = new ArrayList<>();
-        this.dimensao = dimensao;
         this.estado = Estado.PENDENTE;
         this.dataCriacao = LocalDate.now();
+        calcularDimensao();
     }
 
     public String getCodigo() {
@@ -94,12 +94,25 @@ public class Encomenda {
 
     public void adicionarArtigo(Artigo artigo) {
         this.artigos.add(artigo);
+        calcularDimensao();
         calcularPrecoFinal();
     }
 
     public void removerArtigo(Artigo artigo) {
         this.artigos.remove(artigo);
+        calcularDimensao();
         calcularPrecoFinal();
+    }
+
+    private void calcularDimensao() {
+        int numArtigos = this.artigos.size();
+        if (numArtigos < 2) {
+            this.dimensao = Dimensao.PEQUENO;
+        } else if (numArtigos <= 5) {
+            this.dimensao = Dimensao.MEDIO;
+        } else {
+            this.dimensao = Dimensao.GRANDE;
+        }
     }
 
     public void calcularPrecoFinal() {

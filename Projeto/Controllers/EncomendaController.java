@@ -10,15 +10,20 @@ public class EncomendaController {
     private Encomenda encomendaAtual;
 
     public EncomendaController() {
-        this.encomendaAtual = new Encomenda();
+        this.encomendaAtual = null;
+    }
+
+    public void criarEncomenda(String codigo) {
+        this.encomendaAtual = new Encomenda(codigo);
     }
 
     public void adicionarArtigo(Artigo artigo) {
         this.encomendaAtual.getArtigos().add(artigo);
     }
 
-    public void removerArtigo(String codigoArtigo) {
+    public boolean removerArtigo(String codigoArtigo) {
         this.encomendaAtual.getArtigos().removeIf(artigo -> artigo.getCodigo().equals(codigoArtigo));
+        return false;
     }
 
     public List<Artigo> listarArtigos() {

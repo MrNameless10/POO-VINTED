@@ -46,7 +46,6 @@ public class TShirt extends ArtigoBase {
         }
     }
 
-
     @Override
     public String toString() {
         return "TShirt{" +
